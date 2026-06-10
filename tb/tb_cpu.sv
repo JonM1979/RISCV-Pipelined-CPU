@@ -1,5 +1,6 @@
 module tb_cpu;
 
+logic [31:0] cycle;
 logic clk;
 logic reset;
 
@@ -12,7 +13,13 @@ cpu_top uut (
 ////////////////////////////////////////////////////////
 // Clock generator (toggles every 5 time units)
 ////////////////////////////////////////////////////////
-always #5 clk = ~clk;
+always #5 clk <= ~clk;
+
+// Cycle counter and debug output
+always_ff @( posedge clk ) begin
+        cycle <= cycle + 1;
+        $display("Cycle: %0d", cycle);
+end
 
 ////////////////////////////////////////////////////////
 // Simulation control
@@ -20,6 +27,8 @@ always #5 clk = ~clk;
 initial begin
     clk = 0;
     reset = 1;
+    cycle = 0;
+
 
     #10;       // wait 10 time units
     reset = 0; // release reset
@@ -27,6 +36,11 @@ initial begin
     #100;      // run simulation
 
     $finish;
+end
+
+always_ff @( posedge clk ) begin
+        cycle <= cycle + 1;
+        $display("Cycle: %0d", cycle);
 end
 
 endmodule

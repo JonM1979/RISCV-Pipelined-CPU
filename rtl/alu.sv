@@ -1,5 +1,5 @@
 module alu(
-    input logic [31:0] a,b
+    input logic [31:0] a,b,
     output logic [31:0] result
 );
 

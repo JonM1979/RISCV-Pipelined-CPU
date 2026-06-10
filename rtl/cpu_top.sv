@@ -33,7 +33,7 @@ end
 ///////
 
 always_ff @( posedge clk ) begin
-    $$display("Cycle: A=%0d B=%0d RESULT=%0d", a, b, resutlt);
+    $display("Cycle: A=%0d B=%0d RESULT=%0d", a, b, result);
 end
 
 endmodule
