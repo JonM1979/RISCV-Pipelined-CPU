@@ -4,12 +4,13 @@
 int main() {
     Vtb_cpu top;
 
-    while (!Verilated::gotFinish()) {
-        top.clk = 0;
-        top.eval();
+    vluint64_t sim_time = 0;
 
-        top.clk = 1;
+    while (!Verilated::gotFinish()) {
         top.eval();
+        Verilated::timeInc(1); // Increment simulation time by 1 unit
+        sim_time++;
+
     }
 
     return 0;
