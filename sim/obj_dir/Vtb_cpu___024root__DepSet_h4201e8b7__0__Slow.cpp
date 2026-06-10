@@ -64,6 +64,7 @@ VL_ATTR_COLD void Vtb_cpu___024root___ctor_var_reset(Vtb_cpu___024root* vlSelf) 
     Vtb_cpu__Syms* const __restrict vlSymsp VL_ATTR_UNUSED = vlSelf->vlSymsp;
     VL_DEBUG_IF(VL_DBG_MSGF("+    Vtb_cpu___024root___ctor_var_reset\n"); );
     // Body
+    vlSelf->tb_cpu__DOT__cycle = VL_RAND_RESET_I(32);
     vlSelf->tb_cpu__DOT__clk = VL_RAND_RESET_I(1);
     vlSelf->tb_cpu__DOT__reset = VL_RAND_RESET_I(1);
     vlSelf->tb_cpu__DOT__uut__DOT__a = VL_RAND_RESET_I(32);

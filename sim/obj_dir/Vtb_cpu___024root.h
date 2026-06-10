@@ -21,6 +21,7 @@ class alignas(VL_CACHE_LINE_BYTES) Vtb_cpu___024root final : public VerilatedMod
     CData/*0:0*/ __Vdlyvset__tb_cpu__DOT__clk__v0;
     CData/*0:0*/ __Vtrigprevexpr___TOP__tb_cpu__DOT__clk__0;
     CData/*0:0*/ __VactContinue;
+    IData/*31:0*/ tb_cpu__DOT__cycle;
     IData/*31:0*/ tb_cpu__DOT__uut__DOT__a;
     IData/*31:0*/ tb_cpu__DOT__uut__DOT__b;
     IData/*31:0*/ __VactIterCount;

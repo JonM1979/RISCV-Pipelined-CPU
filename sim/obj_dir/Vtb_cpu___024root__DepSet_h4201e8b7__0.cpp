@@ -26,14 +26,15 @@ VL_INLINE_OPT VlCoroutine Vtb_cpu___024root___eval_initial__TOP__Vtiming__0(Vtb_
     // Body
     vlSelf->tb_cpu__DOT__clk = 0U;
     vlSelf->tb_cpu__DOT__reset = 1U;
+    vlSelf->tb_cpu__DOT__cycle = 0U;
     co_await vlSelf->__VdlySched.delay(0xaULL, nullptr, 
                                        "../tb/tb_cpu.sv", 
-                                       24);
+                                       27);
     vlSelf->tb_cpu__DOT__reset = 0U;
     co_await vlSelf->__VdlySched.delay(0x64ULL, nullptr, 
                                        "../tb/tb_cpu.sv", 
-                                       27);
-    VL_FINISH_MT("../tb/tb_cpu.sv", 29, "");
+                                       30);
+    VL_FINISH_MT("../tb/tb_cpu.sv", 32, "");
 }
 
 VL_INLINE_OPT VlCoroutine Vtb_cpu___024root___eval_initial__TOP__Vtiming__1(Vtb_cpu___024root* vlSelf) {
@@ -44,7 +45,7 @@ VL_INLINE_OPT VlCoroutine Vtb_cpu___024root___eval_initial__TOP__Vtiming__1(Vtb_
     while (1U) {
         co_await vlSelf->__VdlySched.delay(5ULL, nullptr, 
                                            "../tb/tb_cpu.sv", 
-                                           15);
+                                           16);
         vlSelf->__Vdlyvval__tb_cpu__DOT__clk__v0 = 
             (1U & (~ (IData)(vlSelf->tb_cpu__DOT__clk)));
         vlSelf->__Vdlyvset__tb_cpu__DOT__clk__v0 = 1U;
@@ -61,11 +62,17 @@ VL_INLINE_OPT void Vtb_cpu___024root___nba_sequent__TOP__0(Vtb_cpu___024root* vl
     if (false && vlSelf) {}  // Prevent unused
     Vtb_cpu__Syms* const __restrict vlSymsp VL_ATTR_UNUSED = vlSelf->vlSymsp;
     VL_DEBUG_IF(VL_DBG_MSGF("+    Vtb_cpu___024root___nba_sequent__TOP__0\n"); );
+    // Init
+    IData/*31:0*/ __Vdly__tb_cpu__DOT__cycle;
+    __Vdly__tb_cpu__DOT__cycle = 0;
     // Body
     VL_WRITEF("Cycle: A=%0# B=%0# RESULT=%0#\n",32,
               vlSelf->tb_cpu__DOT__uut__DOT__a,32,vlSelf->tb_cpu__DOT__uut__DOT__b,
               32,(vlSelf->tb_cpu__DOT__uut__DOT__a 
                   + vlSelf->tb_cpu__DOT__uut__DOT__b));
+    __Vdly__tb_cpu__DOT__cycle = vlSelf->tb_cpu__DOT__cycle;
+    __Vdly__tb_cpu__DOT__cycle = ((IData)(1U) + vlSelf->tb_cpu__DOT__cycle);
+    VL_WRITEF("Cycle: %0#\n",32,vlSelf->tb_cpu__DOT__cycle);
     if (vlSelf->tb_cpu__DOT__reset) {
         vlSelf->tb_cpu__DOT__uut__DOT__b = 0x14U;
         vlSelf->tb_cpu__DOT__uut__DOT__a = 0xaU;
@@ -75,6 +82,7 @@ VL_INLINE_OPT void Vtb_cpu___024root___nba_sequent__TOP__0(Vtb_cpu___024root* vl
         vlSelf->tb_cpu__DOT__uut__DOT__a = ((IData)(1U) 
                                             + vlSelf->tb_cpu__DOT__uut__DOT__a);
     }
+    vlSelf->tb_cpu__DOT__cycle = __Vdly__tb_cpu__DOT__cycle;
 }
 
 VL_INLINE_OPT void Vtb_cpu___024root___nba_sequent__TOP__1(Vtb_cpu___024root* vlSelf) {
