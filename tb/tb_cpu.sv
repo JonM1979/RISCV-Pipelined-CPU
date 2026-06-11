@@ -15,12 +15,6 @@ cpu_top uut (
 ////////////////////////////////////////////////////////
 always #5 clk <= ~clk;
 
-// Cycle counter and debug output
-always_ff @( posedge clk ) begin
-        cycle <= cycle + 1;
-        $display("Cycle: %0d", cycle);
-end
-
 ////////////////////////////////////////////////////////
 // Simulation control
 ////////////////////////////////////////////////////////
@@ -38,9 +32,14 @@ initial begin
     $finish;
 end
 
-always_ff @( posedge clk ) begin
+always_ff @(posedge clk) begin
+    if (!reset) begin
         cycle <= cycle + 1;
-        $display("Cycle: %0d", cycle);
+
+        $display("Cycle=%0d | PC=%h | INSTR=%h | rs1=%0d rs2=%0d rd=%0d | R1=%0d R2=%0d",
+                  cycle, uut.pc, uut.instr, uut.rs1, uut.rs2, uut.rd,
+                  uut.rd1, uut.rd2);
+    end
 end
 
 endmodule

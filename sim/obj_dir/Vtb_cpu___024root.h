@@ -19,13 +19,17 @@ class alignas(VL_CACHE_LINE_BYTES) Vtb_cpu___024root final : public VerilatedMod
     CData/*0:0*/ tb_cpu__DOT__reset;
     CData/*0:0*/ __Vdlyvval__tb_cpu__DOT__clk__v0;
     CData/*0:0*/ __Vdlyvset__tb_cpu__DOT__clk__v0;
+    CData/*0:0*/ __VstlFirstIteration;
     CData/*0:0*/ __Vtrigprevexpr___TOP__tb_cpu__DOT__clk__0;
     CData/*0:0*/ __VactContinue;
     IData/*31:0*/ tb_cpu__DOT__cycle;
-    IData/*31:0*/ tb_cpu__DOT__uut__DOT__a;
-    IData/*31:0*/ tb_cpu__DOT__uut__DOT__b;
+    IData/*31:0*/ tb_cpu__DOT__uut__DOT__pc;
+    IData/*31:0*/ tb_cpu__DOT__uut__DOT__instr;
     IData/*31:0*/ __VactIterCount;
+    VlUnpacked<IData/*31:0*/, 32> tb_cpu__DOT__uut__DOT__rf__DOT__regs;
+    VlUnpacked<IData/*31:0*/, 256> tb_cpu__DOT__uut__DOT__imem_inst__DOT__mem;
     VlDelayScheduler __VdlySched;
+    VlTriggerVec<1> __VstlTriggered;
     VlTriggerVec<2> __VactTriggered;
     VlTriggerVec<2> __VnbaTriggered;
 

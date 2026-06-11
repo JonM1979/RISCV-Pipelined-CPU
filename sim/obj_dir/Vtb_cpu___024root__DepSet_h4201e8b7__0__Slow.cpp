@@ -11,16 +11,106 @@ VL_ATTR_COLD void Vtb_cpu___024root___eval_static(Vtb_cpu___024root* vlSelf) {
     VL_DEBUG_IF(VL_DBG_MSGF("+    Vtb_cpu___024root___eval_static\n"); );
 }
 
+VL_ATTR_COLD void Vtb_cpu___024root___eval_initial__TOP(Vtb_cpu___024root* vlSelf) {
+    if (false && vlSelf) {}  // Prevent unused
+    Vtb_cpu__Syms* const __restrict vlSymsp VL_ATTR_UNUSED = vlSelf->vlSymsp;
+    VL_DEBUG_IF(VL_DBG_MSGF("+    Vtb_cpu___024root___eval_initial__TOP\n"); );
+    // Body
+    vlSelf->tb_cpu__DOT__uut__DOT__imem_inst__DOT__mem[0U] = 0x13U;
+    vlSelf->tb_cpu__DOT__uut__DOT__imem_inst__DOT__mem[1U] = 0x100093U;
+    vlSelf->tb_cpu__DOT__uut__DOT__imem_inst__DOT__mem[2U] = 0x200113U;
+    vlSelf->tb_cpu__DOT__uut__DOT__imem_inst__DOT__mem[3U] = 0x3081b3U;
+    vlSelf->tb_cpu__DOT__uut__DOT__imem_inst__DOT__mem[4U] = 0x13U;
+}
+
 VL_ATTR_COLD void Vtb_cpu___024root___eval_final(Vtb_cpu___024root* vlSelf) {
     if (false && vlSelf) {}  // Prevent unused
     Vtb_cpu__Syms* const __restrict vlSymsp VL_ATTR_UNUSED = vlSelf->vlSymsp;
     VL_DEBUG_IF(VL_DBG_MSGF("+    Vtb_cpu___024root___eval_final\n"); );
 }
 
+#ifdef VL_DEBUG
+VL_ATTR_COLD void Vtb_cpu___024root___dump_triggers__stl(Vtb_cpu___024root* vlSelf);
+#endif  // VL_DEBUG
+VL_ATTR_COLD bool Vtb_cpu___024root___eval_phase__stl(Vtb_cpu___024root* vlSelf);
+
 VL_ATTR_COLD void Vtb_cpu___024root___eval_settle(Vtb_cpu___024root* vlSelf) {
     if (false && vlSelf) {}  // Prevent unused
     Vtb_cpu__Syms* const __restrict vlSymsp VL_ATTR_UNUSED = vlSelf->vlSymsp;
     VL_DEBUG_IF(VL_DBG_MSGF("+    Vtb_cpu___024root___eval_settle\n"); );
+    // Init
+    IData/*31:0*/ __VstlIterCount;
+    CData/*0:0*/ __VstlContinue;
+    // Body
+    __VstlIterCount = 0U;
+    vlSelf->__VstlFirstIteration = 1U;
+    __VstlContinue = 1U;
+    while (__VstlContinue) {
+        if (VL_UNLIKELY((0x64U < __VstlIterCount))) {
+#ifdef VL_DEBUG
+            Vtb_cpu___024root___dump_triggers__stl(vlSelf);
+#endif
+            VL_FATAL_MT("../tb/tb_cpu.sv", 1, "", "Settle region did not converge.");
+        }
+        __VstlIterCount = ((IData)(1U) + __VstlIterCount);
+        __VstlContinue = 0U;
+        if (Vtb_cpu___024root___eval_phase__stl(vlSelf)) {
+            __VstlContinue = 1U;
+        }
+        vlSelf->__VstlFirstIteration = 0U;
+    }
+}
+
+#ifdef VL_DEBUG
+VL_ATTR_COLD void Vtb_cpu___024root___dump_triggers__stl(Vtb_cpu___024root* vlSelf) {
+    if (false && vlSelf) {}  // Prevent unused
+    Vtb_cpu__Syms* const __restrict vlSymsp VL_ATTR_UNUSED = vlSelf->vlSymsp;
+    VL_DEBUG_IF(VL_DBG_MSGF("+    Vtb_cpu___024root___dump_triggers__stl\n"); );
+    // Body
+    if ((1U & (~ (IData)(vlSelf->__VstlTriggered.any())))) {
+        VL_DBG_MSGF("         No triggers active\n");
+    }
+    if ((1ULL & vlSelf->__VstlTriggered.word(0U))) {
+        VL_DBG_MSGF("         'stl' region trigger index 0 is active: Internal 'stl' trigger - first iteration\n");
+    }
+}
+#endif  // VL_DEBUG
+
+VL_ATTR_COLD void Vtb_cpu___024root___stl_sequent__TOP__0(Vtb_cpu___024root* vlSelf) {
+    if (false && vlSelf) {}  // Prevent unused
+    Vtb_cpu__Syms* const __restrict vlSymsp VL_ATTR_UNUSED = vlSelf->vlSymsp;
+    VL_DEBUG_IF(VL_DBG_MSGF("+    Vtb_cpu___024root___stl_sequent__TOP__0\n"); );
+    // Body
+    vlSelf->tb_cpu__DOT__uut__DOT__instr = vlSelf->tb_cpu__DOT__uut__DOT__imem_inst__DOT__mem
+        [(0xffU & (vlSelf->tb_cpu__DOT__uut__DOT__pc 
+                   >> 2U))];
+}
+
+VL_ATTR_COLD void Vtb_cpu___024root___eval_stl(Vtb_cpu___024root* vlSelf) {
+    if (false && vlSelf) {}  // Prevent unused
+    Vtb_cpu__Syms* const __restrict vlSymsp VL_ATTR_UNUSED = vlSelf->vlSymsp;
+    VL_DEBUG_IF(VL_DBG_MSGF("+    Vtb_cpu___024root___eval_stl\n"); );
+    // Body
+    if ((1ULL & vlSelf->__VstlTriggered.word(0U))) {
+        Vtb_cpu___024root___stl_sequent__TOP__0(vlSelf);
+    }
+}
+
+VL_ATTR_COLD void Vtb_cpu___024root___eval_triggers__stl(Vtb_cpu___024root* vlSelf);
+
+VL_ATTR_COLD bool Vtb_cpu___024root___eval_phase__stl(Vtb_cpu___024root* vlSelf) {
+    if (false && vlSelf) {}  // Prevent unused
+    Vtb_cpu__Syms* const __restrict vlSymsp VL_ATTR_UNUSED = vlSelf->vlSymsp;
+    VL_DEBUG_IF(VL_DBG_MSGF("+    Vtb_cpu___024root___eval_phase__stl\n"); );
+    // Init
+    CData/*0:0*/ __VstlExecute;
+    // Body
+    Vtb_cpu___024root___eval_triggers__stl(vlSelf);
+    __VstlExecute = vlSelf->__VstlTriggered.any();
+    if (__VstlExecute) {
+        Vtb_cpu___024root___eval_stl(vlSelf);
+    }
+    return (__VstlExecute);
 }
 
 #ifdef VL_DEBUG
@@ -67,8 +157,14 @@ VL_ATTR_COLD void Vtb_cpu___024root___ctor_var_reset(Vtb_cpu___024root* vlSelf) 
     vlSelf->tb_cpu__DOT__cycle = VL_RAND_RESET_I(32);
     vlSelf->tb_cpu__DOT__clk = VL_RAND_RESET_I(1);
     vlSelf->tb_cpu__DOT__reset = VL_RAND_RESET_I(1);
-    vlSelf->tb_cpu__DOT__uut__DOT__a = VL_RAND_RESET_I(32);
-    vlSelf->tb_cpu__DOT__uut__DOT__b = VL_RAND_RESET_I(32);
+    vlSelf->tb_cpu__DOT__uut__DOT__pc = VL_RAND_RESET_I(32);
+    vlSelf->tb_cpu__DOT__uut__DOT__instr = VL_RAND_RESET_I(32);
+    for (int __Vi0 = 0; __Vi0 < 32; ++__Vi0) {
+        vlSelf->tb_cpu__DOT__uut__DOT__rf__DOT__regs[__Vi0] = VL_RAND_RESET_I(32);
+    }
+    for (int __Vi0 = 0; __Vi0 < 256; ++__Vi0) {
+        vlSelf->tb_cpu__DOT__uut__DOT__imem_inst__DOT__mem[__Vi0] = VL_RAND_RESET_I(32);
+    }
     vlSelf->__Vdlyvval__tb_cpu__DOT__clk__v0 = VL_RAND_RESET_I(1);
     vlSelf->__Vdlyvset__tb_cpu__DOT__clk__v0 = 0;
     vlSelf->__Vtrigprevexpr___TOP__tb_cpu__DOT__clk__0 = VL_RAND_RESET_I(1);

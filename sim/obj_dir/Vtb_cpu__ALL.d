@@ -8,4 +8,5 @@ Vtb_cpu__ALL.o: Vtb_cpu__ALL.cpp Vtb_cpu.cpp Vtb_cpu__pch.h \
  /usr/share/verilator/include/verilated.h \
  Vtb_cpu___024root__DepSet_hb01ab115__0.cpp \
  Vtb_cpu___024root__DepSet_h4201e8b7__0.cpp Vtb_cpu___024root__Slow.cpp \
+ Vtb_cpu___024root__DepSet_hb01ab115__0__Slow.cpp \
  Vtb_cpu___024root__DepSet_h4201e8b7__0__Slow.cpp Vtb_cpu__Syms.cpp
