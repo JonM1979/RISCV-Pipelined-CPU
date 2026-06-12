@@ -18,8 +18,8 @@ VL_ATTR_COLD void Vtb_cpu___024root___eval_initial__TOP(Vtb_cpu___024root* vlSel
     // Body
     vlSelf->tb_cpu__DOT__uut__DOT__imem_inst__DOT__mem[0U] = 0x100093U;
     vlSelf->tb_cpu__DOT__uut__DOT__imem_inst__DOT__mem[1U] = 0x108133U;
-    vlSelf->tb_cpu__DOT__uut__DOT__imem_inst__DOT__mem[2U] = 0x200113U;
-    vlSelf->tb_cpu__DOT__uut__DOT__imem_inst__DOT__mem[3U] = 0x3101b3U;
+    vlSelf->tb_cpu__DOT__uut__DOT__imem_inst__DOT__mem[2U] = 0x2101b3U;
+    vlSelf->tb_cpu__DOT__uut__DOT__imem_inst__DOT__mem[3U] = 0x318233U;
     vlSelf->tb_cpu__DOT__uut__DOT__imem_inst__DOT__mem[4U] = 0x13U;
 }
 
