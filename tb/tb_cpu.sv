@@ -11,7 +11,7 @@ cpu_top uut (
 );
 
 ////////////////////////////////////////////////////////
-// Clock generator (toggles every 5 time units)
+// Clock generator
 ////////////////////////////////////////////////////////
 always #5 clk <= ~clk;
 
@@ -23,22 +23,52 @@ initial begin
     reset = 1;
     cycle = 0;
 
+    #10;
+    reset = 0;
 
-    #10;       // wait 10 time units
-    reset = 0; // release reset
-
-    #100;      // run simulation
-
+    #100;
     $finish;
 end
 
+////////////////////////////////////////////////////////
+// Corrected Pipeline-Aware Display + Checks
+////////////////////////////////////////////////////////
 always_ff @(posedge clk) begin
     if (!reset) begin
         cycle <= cycle + 1;
 
-        $display("Cycle=%0d | PC=%h | INSTR=%h | rs1=%0d rs2=%0d rd=%0d | R1=%0d R2=%0d",
-                  cycle, uut.pc, uut.instr, uut.rs1, uut.rs2, uut.rd,
-                  uut.rd1, uut.rd2);
+        //////////////////////////////////////////////////////
+        // ✅ Better pipeline visibility
+        //////////////////////////////////////////////////////
+        
+        $display(
+        "C=%0d | IF=%h | ID=%h | EX(rs1=%0d rs2=%0d) | RAW(rd1=%0d rd2=%0d) | FWD_A=%0d FWD_B=%0d | SEL_A=%b SEL_B=%b | EX_OUT=%0d | WB(rd=%0d data=%0d)",
+        cycle,
+        uut.instr,
+        uut.if_id_instr,
+        uut.id_ex_rs1,
+        uut.id_ex_rs2,
+        uut.id_ex_rd1,
+        uut.id_ex_rd2,
+        uut.forward_a,
+        uut.forward_b,
+        uut.forward_a_sel,
+        uut.forward_b_sel,
+        uut.alu_result,
+        uut.mem_wb_rd,
+        uut.mem_wb_result
+        );
+
+
+        //////////////////////////////////////////////////////
+        // ✅ Pipeline validity check (correct version)
+        //////////////////////////////////////////////////////
+        if (cycle > 0) begin
+            // Check for invalid (X) values only
+            if (^uut.if_id_instr === 1'bx) begin
+                $fatal("ERROR: IF/ID contains invalid (X) value");
+            end
+        end
     end
 end
 
