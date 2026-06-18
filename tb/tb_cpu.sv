@@ -42,7 +42,7 @@ always_ff @(posedge clk) begin
         //////////////////////////////////////////////////////
         
         $display(
-        "C=%0d | IF=%h | ID=%h | EX(rs1=%0d rs2=%0d) | RAW(rd1=%0d rd2=%0d) | FWD_A=%0d FWD_B=%0d | SEL_A=%b SEL_B=%b | EX_OUT=%0d | WB(rd=%0d data=%0d)",
+        "C=%0d | IF=%h | ID=%h | EX(rs1=%0d rs2=%0d) | RAW(rd1=%0d rd2=%0d) | FWD_A=%0d FWD_B=%0d | SEL_A=%b SEL_B=%b | EX_OUT=%0d | WB(rd=%0d data=%0d) | STALL=%b",
         cycle,
         uut.instr,
         uut.if_id_instr,
@@ -56,7 +56,8 @@ always_ff @(posedge clk) begin
         uut.forward_b_sel,
         uut.alu_result,
         uut.mem_wb_rd,
-        uut.mem_wb_result
+        uut.mem_wb_result,
+        uut.stall
         );
 
 

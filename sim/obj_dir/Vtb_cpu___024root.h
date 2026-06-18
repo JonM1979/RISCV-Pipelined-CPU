@@ -17,6 +17,7 @@ class alignas(VL_CACHE_LINE_BYTES) Vtb_cpu___024root final : public VerilatedMod
     // DESIGN SPECIFIC STATE
     CData/*0:0*/ tb_cpu__DOT__clk;
     CData/*0:0*/ tb_cpu__DOT__reset;
+    CData/*0:0*/ tb_cpu__DOT__uut__DOT__stall;
     CData/*4:0*/ tb_cpu__DOT__uut__DOT__id_ex_rd;
     CData/*6:0*/ tb_cpu__DOT__uut__DOT__id_ex_opcode;
     CData/*4:0*/ tb_cpu__DOT__uut__DOT__id_ex_rs1;
@@ -43,10 +44,12 @@ class alignas(VL_CACHE_LINE_BYTES) Vtb_cpu___024root final : public VerilatedMod
     IData/*31:0*/ tb_cpu__DOT__uut__DOT__forward_b;
     IData/*31:0*/ tb_cpu__DOT__uut__DOT__alu_result;
     IData/*31:0*/ tb_cpu__DOT__uut__DOT__ex_mem_result;
+    IData/*31:0*/ tb_cpu__DOT__uut__DOT__ex_mem_store_data;
     IData/*31:0*/ tb_cpu__DOT__uut__DOT__mem_wb_result;
     IData/*31:0*/ __VactIterCount;
     VlUnpacked<IData/*31:0*/, 256> tb_cpu__DOT__uut__DOT__imem_inst__DOT__mem;
     VlUnpacked<IData/*31:0*/, 32> tb_cpu__DOT__uut__DOT__rf__DOT__regs;
+    VlUnpacked<IData/*31:0*/, 256> tb_cpu__DOT__uut__DOT__dmem__DOT__mem;
     VlDelayScheduler __VdlySched;
     VlTriggerVec<1> __VstlTriggered;
     VlTriggerVec<2> __VactTriggered;
