@@ -6,4 +6,6 @@
 #include "Vtb_cpu___024root__Slow.cpp"
 #include "Vtb_cpu___024root__DepSet_hb01ab115__0__Slow.cpp"
 #include "Vtb_cpu___024root__DepSet_h4201e8b7__0__Slow.cpp"
+#include "Vtb_cpu___024unit__Slow.cpp"
+#include "Vtb_cpu___024unit__DepSet_hc1ed72f2__0__Slow.cpp"
 #include "Vtb_cpu__Syms.cpp"

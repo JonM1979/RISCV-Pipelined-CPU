@@ -1,7 +1,7 @@
 module data_memory(
     input logic clk,
-    input logic [31:0]mem_we, // write enable
-    input logic [31:0] mem_re, // read enable
+    input logic mem_we, // write enable
+    input logic mem_re, // read enable
     input logic [31:0] addr,
     input logic [31:0] write_data,
     output logic [31:0] read_data

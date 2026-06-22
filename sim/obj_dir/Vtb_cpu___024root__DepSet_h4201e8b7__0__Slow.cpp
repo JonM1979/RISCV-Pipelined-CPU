@@ -61,7 +61,7 @@ VL_ATTR_COLD void Vtb_cpu___024root___eval_settle(Vtb_cpu___024root* vlSelf) {
 #ifdef VL_DEBUG
             Vtb_cpu___024root___dump_triggers__stl(vlSelf);
 #endif
-            VL_FATAL_MT("../tb/tb_cpu.sv", 1, "", "Settle region did not converge.");
+            VL_FATAL_MT("../rtl/../tb/tb_cpu.sv", 1, "", "Settle region did not converge.");
         }
         __VstlIterCount = ((IData)(1U) + __VstlIterCount);
         __VstlContinue = 0U;
@@ -92,6 +92,151 @@ VL_ATTR_COLD void Vtb_cpu___024root___stl_sequent__TOP__0(Vtb_cpu___024root* vlS
     Vtb_cpu__Syms* const __restrict vlSymsp VL_ATTR_UNUSED = vlSelf->vlSymsp;
     VL_DEBUG_IF(VL_DBG_MSGF("+    Vtb_cpu___024root___stl_sequent__TOP__0\n"); );
     // Body
+    vlSelf->tb_cpu__DOT__uut__DOT__decoded_imm = ((0x40U 
+                                                   & vlSelf->tb_cpu__DOT__uut__DOT__if_id_instr)
+                                                   ? 
+                                                  ((0x20U 
+                                                    & vlSelf->tb_cpu__DOT__uut__DOT__if_id_instr)
+                                                    ? 
+                                                   ((0x10U 
+                                                     & vlSelf->tb_cpu__DOT__uut__DOT__if_id_instr)
+                                                     ? 0U
+                                                     : 
+                                                    ((8U 
+                                                      & vlSelf->tb_cpu__DOT__uut__DOT__if_id_instr)
+                                                      ? 
+                                                     ((4U 
+                                                       & vlSelf->tb_cpu__DOT__uut__DOT__if_id_instr)
+                                                       ? 
+                                                      ((2U 
+                                                        & vlSelf->tb_cpu__DOT__uut__DOT__if_id_instr)
+                                                        ? 
+                                                       ((1U 
+                                                         & vlSelf->tb_cpu__DOT__uut__DOT__if_id_instr)
+                                                         ? 
+                                                        (((- (IData)(
+                                                                     (vlSelf->tb_cpu__DOT__uut__DOT__if_id_instr 
+                                                                      >> 0x1fU))) 
+                                                          << 0x15U) 
+                                                         | ((0x100000U 
+                                                             & (vlSelf->tb_cpu__DOT__uut__DOT__if_id_instr 
+                                                                >> 0xbU)) 
+                                                            | ((0xff000U 
+                                                                & vlSelf->tb_cpu__DOT__uut__DOT__if_id_instr) 
+                                                               | ((0x800U 
+                                                                   & (vlSelf->tb_cpu__DOT__uut__DOT__if_id_instr 
+                                                                      >> 9U)) 
+                                                                  | (0x7feU 
+                                                                     & (vlSelf->tb_cpu__DOT__uut__DOT__if_id_instr 
+                                                                        >> 0x14U))))))
+                                                         : 0U)
+                                                        : 0U)
+                                                       : 0U)
+                                                      : 
+                                                     ((4U 
+                                                       & vlSelf->tb_cpu__DOT__uut__DOT__if_id_instr)
+                                                       ? 0U
+                                                       : 
+                                                      ((2U 
+                                                        & vlSelf->tb_cpu__DOT__uut__DOT__if_id_instr)
+                                                        ? 
+                                                       ((1U 
+                                                         & vlSelf->tb_cpu__DOT__uut__DOT__if_id_instr)
+                                                         ? 
+                                                        (((- (IData)(
+                                                                     (vlSelf->tb_cpu__DOT__uut__DOT__if_id_instr 
+                                                                      >> 0x1fU))) 
+                                                          << 0xdU) 
+                                                         | ((0x1000U 
+                                                             & (vlSelf->tb_cpu__DOT__uut__DOT__if_id_instr 
+                                                                >> 0x13U)) 
+                                                            | ((0x800U 
+                                                                & (vlSelf->tb_cpu__DOT__uut__DOT__if_id_instr 
+                                                                   << 4U)) 
+                                                               | ((0x7e0U 
+                                                                   & (vlSelf->tb_cpu__DOT__uut__DOT__if_id_instr 
+                                                                      >> 0x14U)) 
+                                                                  | (0x1eU 
+                                                                     & (vlSelf->tb_cpu__DOT__uut__DOT__if_id_instr 
+                                                                        >> 7U))))))
+                                                         : 0U)
+                                                        : 0U))))
+                                                    : 0U)
+                                                   : 
+                                                  ((0x20U 
+                                                    & vlSelf->tb_cpu__DOT__uut__DOT__if_id_instr)
+                                                    ? 
+                                                   ((0x10U 
+                                                     & vlSelf->tb_cpu__DOT__uut__DOT__if_id_instr)
+                                                     ? 
+                                                    ((8U 
+                                                      & vlSelf->tb_cpu__DOT__uut__DOT__if_id_instr)
+                                                      ? 0U
+                                                      : 
+                                                     ((4U 
+                                                       & vlSelf->tb_cpu__DOT__uut__DOT__if_id_instr)
+                                                       ? 
+                                                      ((2U 
+                                                        & vlSelf->tb_cpu__DOT__uut__DOT__if_id_instr)
+                                                        ? 
+                                                       ((1U 
+                                                         & vlSelf->tb_cpu__DOT__uut__DOT__if_id_instr)
+                                                         ? 
+                                                        (0xfffff000U 
+                                                         & vlSelf->tb_cpu__DOT__uut__DOT__if_id_instr)
+                                                         : 0U)
+                                                        : 0U)
+                                                       : 0U))
+                                                     : 
+                                                    ((8U 
+                                                      & vlSelf->tb_cpu__DOT__uut__DOT__if_id_instr)
+                                                      ? 0U
+                                                      : 
+                                                     ((4U 
+                                                       & vlSelf->tb_cpu__DOT__uut__DOT__if_id_instr)
+                                                       ? 0U
+                                                       : 
+                                                      ((2U 
+                                                        & vlSelf->tb_cpu__DOT__uut__DOT__if_id_instr)
+                                                        ? 
+                                                       ((1U 
+                                                         & vlSelf->tb_cpu__DOT__uut__DOT__if_id_instr)
+                                                         ? 
+                                                        (((- (IData)(
+                                                                     (vlSelf->tb_cpu__DOT__uut__DOT__if_id_instr 
+                                                                      >> 0x1fU))) 
+                                                          << 0xcU) 
+                                                         | ((0xfe0U 
+                                                             & (vlSelf->tb_cpu__DOT__uut__DOT__if_id_instr 
+                                                                >> 0x14U)) 
+                                                            | (0x1fU 
+                                                               & (vlSelf->tb_cpu__DOT__uut__DOT__if_id_instr 
+                                                                  >> 7U))))
+                                                         : 0U)
+                                                        : 0U))))
+                                                    : 
+                                                   ((8U 
+                                                     & vlSelf->tb_cpu__DOT__uut__DOT__if_id_instr)
+                                                     ? 0U
+                                                     : 
+                                                    ((4U 
+                                                      & vlSelf->tb_cpu__DOT__uut__DOT__if_id_instr)
+                                                      ? 0U
+                                                      : 
+                                                     ((2U 
+                                                       & vlSelf->tb_cpu__DOT__uut__DOT__if_id_instr)
+                                                       ? 
+                                                      ((1U 
+                                                        & vlSelf->tb_cpu__DOT__uut__DOT__if_id_instr)
+                                                        ? 
+                                                       (((- (IData)(
+                                                                    (vlSelf->tb_cpu__DOT__uut__DOT__if_id_instr 
+                                                                     >> 0x1fU))) 
+                                                         << 0xcU) 
+                                                        | (vlSelf->tb_cpu__DOT__uut__DOT__if_id_instr 
+                                                           >> 0x14U))
+                                                        : 0U)
+                                                       : 0U)))));
     vlSelf->tb_cpu__DOT__uut__DOT__instr = vlSelf->tb_cpu__DOT__uut__DOT__imem_inst__DOT__mem
         [(0xffU & (vlSelf->tb_cpu__DOT__uut__DOT__pc 
                    >> 2U))];
@@ -109,33 +254,23 @@ VL_ATTR_COLD void Vtb_cpu___024root___stl_sequent__TOP__0(Vtb_cpu___024root* vlS
                                                       & (vlSelf->tb_cpu__DOT__uut__DOT__if_id_instr 
                                                          >> 0x14U))))));
     vlSelf->tb_cpu__DOT__uut__DOT__forward_a_sel = 0U;
-    if ((((0U != (IData)(vlSelf->tb_cpu__DOT__uut__DOT__mem_wb_rd)) 
-          & ((IData)(vlSelf->tb_cpu__DOT__uut__DOT__mem_wb_rd) 
-             == (IData)(vlSelf->tb_cpu__DOT__uut__DOT__id_ex_rs1))) 
-         & (((0x13U == (IData)(vlSelf->tb_cpu__DOT__uut__DOT__mem_wb_opcode)) 
-             | (0x33U == (IData)(vlSelf->tb_cpu__DOT__uut__DOT__mem_wb_opcode))) 
-            | (3U == (IData)(vlSelf->tb_cpu__DOT__uut__DOT__mem_wb_opcode))))) {
+    if (((0U != (IData)(vlSelf->tb_cpu__DOT__uut__DOT__mem_wb_rd)) 
+         & ((IData)(vlSelf->tb_cpu__DOT__uut__DOT__mem_wb_rd) 
+            == (IData)(vlSelf->tb_cpu__DOT__uut__DOT__id_ex_rs1)))) {
         vlSelf->tb_cpu__DOT__uut__DOT__forward_a_sel = 1U;
-    } else if ((((0U != (IData)(vlSelf->tb_cpu__DOT__uut__DOT__ex_mem_rd)) 
-                 & ((IData)(vlSelf->tb_cpu__DOT__uut__DOT__ex_mem_rd) 
-                    == (IData)(vlSelf->tb_cpu__DOT__uut__DOT__id_ex_rs1))) 
-                & ((0x13U == (IData)(vlSelf->tb_cpu__DOT__uut__DOT__ex_mem_opcode)) 
-                   | (0x33U == (IData)(vlSelf->tb_cpu__DOT__uut__DOT__ex_mem_opcode))))) {
+    } else if (((0U != (IData)(vlSelf->tb_cpu__DOT__uut__DOT__ex_mem_rd)) 
+                & ((IData)(vlSelf->tb_cpu__DOT__uut__DOT__ex_mem_rd) 
+                   == (IData)(vlSelf->tb_cpu__DOT__uut__DOT__id_ex_rs1)))) {
         vlSelf->tb_cpu__DOT__uut__DOT__forward_a_sel = 2U;
     }
     vlSelf->tb_cpu__DOT__uut__DOT__forward_b_sel = 0U;
-    if ((((0U != (IData)(vlSelf->tb_cpu__DOT__uut__DOT__mem_wb_rd)) 
-          & ((IData)(vlSelf->tb_cpu__DOT__uut__DOT__mem_wb_rd) 
-             == (IData)(vlSelf->tb_cpu__DOT__uut__DOT__id_ex_rs2))) 
-         & (((0x13U == (IData)(vlSelf->tb_cpu__DOT__uut__DOT__mem_wb_opcode)) 
-             | (0x33U == (IData)(vlSelf->tb_cpu__DOT__uut__DOT__mem_wb_opcode))) 
-            | (3U == (IData)(vlSelf->tb_cpu__DOT__uut__DOT__mem_wb_opcode))))) {
+    if (((0U != (IData)(vlSelf->tb_cpu__DOT__uut__DOT__mem_wb_rd)) 
+         & ((IData)(vlSelf->tb_cpu__DOT__uut__DOT__mem_wb_rd) 
+            == (IData)(vlSelf->tb_cpu__DOT__uut__DOT__id_ex_rs2)))) {
         vlSelf->tb_cpu__DOT__uut__DOT__forward_b_sel = 1U;
-    } else if ((((0U != (IData)(vlSelf->tb_cpu__DOT__uut__DOT__ex_mem_rd)) 
-                 & ((IData)(vlSelf->tb_cpu__DOT__uut__DOT__ex_mem_rd) 
-                    == (IData)(vlSelf->tb_cpu__DOT__uut__DOT__id_ex_rs2))) 
-                & ((0x13U == (IData)(vlSelf->tb_cpu__DOT__uut__DOT__ex_mem_opcode)) 
-                   | (0x33U == (IData)(vlSelf->tb_cpu__DOT__uut__DOT__ex_mem_opcode))))) {
+    } else if (((0U != (IData)(vlSelf->tb_cpu__DOT__uut__DOT__ex_mem_rd)) 
+                & ((IData)(vlSelf->tb_cpu__DOT__uut__DOT__ex_mem_rd) 
+                   == (IData)(vlSelf->tb_cpu__DOT__uut__DOT__id_ex_rs2)))) {
         vlSelf->tb_cpu__DOT__uut__DOT__forward_b_sel = 2U;
     }
     vlSelf->tb_cpu__DOT__uut__DOT__forward_a = ((2U 
@@ -241,24 +376,25 @@ VL_ATTR_COLD void Vtb_cpu___024root___ctor_var_reset(Vtb_cpu___024root* vlSelf) 
     vlSelf->tb_cpu__DOT__uut__DOT__pc = VL_RAND_RESET_I(32);
     vlSelf->tb_cpu__DOT__uut__DOT__instr = VL_RAND_RESET_I(32);
     vlSelf->tb_cpu__DOT__uut__DOT__if_id_instr = VL_RAND_RESET_I(32);
+    vlSelf->tb_cpu__DOT__uut__DOT__decoded_imm = VL_RAND_RESET_I(32);
+    vlSelf->tb_cpu__DOT__uut__DOT__id_ex_opcode = VL_RAND_RESET_I(7);
+    vlSelf->tb_cpu__DOT__uut__DOT__id_ex_rd = VL_RAND_RESET_I(5);
     vlSelf->tb_cpu__DOT__uut__DOT__id_ex_rd1 = VL_RAND_RESET_I(32);
     vlSelf->tb_cpu__DOT__uut__DOT__id_ex_rd2 = VL_RAND_RESET_I(32);
     vlSelf->tb_cpu__DOT__uut__DOT__id_ex_imm = VL_RAND_RESET_I(32);
-    vlSelf->tb_cpu__DOT__uut__DOT__id_ex_rd = VL_RAND_RESET_I(5);
-    vlSelf->tb_cpu__DOT__uut__DOT__id_ex_opcode = VL_RAND_RESET_I(7);
     vlSelf->tb_cpu__DOT__uut__DOT__id_ex_rs1 = VL_RAND_RESET_I(5);
     vlSelf->tb_cpu__DOT__uut__DOT__id_ex_rs2 = VL_RAND_RESET_I(5);
     vlSelf->tb_cpu__DOT__uut__DOT__forward_a = VL_RAND_RESET_I(32);
     vlSelf->tb_cpu__DOT__uut__DOT__forward_b = VL_RAND_RESET_I(32);
     vlSelf->tb_cpu__DOT__uut__DOT__forward_a_sel = VL_RAND_RESET_I(2);
     vlSelf->tb_cpu__DOT__uut__DOT__forward_b_sel = VL_RAND_RESET_I(2);
-    vlSelf->tb_cpu__DOT__uut__DOT__alu_result = VL_RAND_RESET_I(32);
     vlSelf->tb_cpu__DOT__uut__DOT__ex_mem_result = VL_RAND_RESET_I(32);
     vlSelf->tb_cpu__DOT__uut__DOT__ex_mem_rd = VL_RAND_RESET_I(5);
-    vlSelf->tb_cpu__DOT__uut__DOT__ex_mem_opcode = VL_RAND_RESET_I(7);
-    vlSelf->tb_cpu__DOT__uut__DOT__ex_mem_store_data = VL_RAND_RESET_I(32);
     vlSelf->tb_cpu__DOT__uut__DOT__mem_wb_result = VL_RAND_RESET_I(32);
     vlSelf->tb_cpu__DOT__uut__DOT__mem_wb_rd = VL_RAND_RESET_I(5);
+    vlSelf->tb_cpu__DOT__uut__DOT__alu_result = VL_RAND_RESET_I(32);
+    vlSelf->tb_cpu__DOT__uut__DOT__ex_mem_opcode = VL_RAND_RESET_I(7);
+    vlSelf->tb_cpu__DOT__uut__DOT__ex_mem_store_data = VL_RAND_RESET_I(32);
     vlSelf->tb_cpu__DOT__uut__DOT__mem_wb_opcode = VL_RAND_RESET_I(7);
     for (int __Vi0 = 0; __Vi0 < 256; ++__Vi0) {
         vlSelf->tb_cpu__DOT__uut__DOT__imem_inst__DOT__mem[__Vi0] = VL_RAND_RESET_I(32);

@@ -1,4 +1,6 @@
 
+`include "defines.svh"
+
 module cpu_top(
     input logic clk,
     input logic reset
@@ -50,11 +52,37 @@ end
 ///////////////////////////////////////////
 
 // Instruction fields
+logic [6:0] opcode;
+logic [2:0] funct3;
+logic [6:0] funct7;
 logic [4:0] rs1, rs2, rd; // Register indices
-assign rs1 = if_id_instr[19:15]; // Extract rs1 from instruction
-assign rs2 = if_id_instr[24:20]; // Extract rs2 from instruction
-assign rd  = if_id_instr[11:7];  // Extract register destination from instruction
+logic [31:0] decoded_imm;
 
+logic is_load, is_store, is_branch, is_rtype, is_itype, is_jtype, is_jal;
+
+
+decode dec(
+    .instr(if_id_instr),
+
+    .opcode(opcode),
+    .funct3(funct3),
+    .funct7(funct7),
+    .rd(rd),
+    .rs1(rs1),
+    .rs2(rs2),
+
+    .imm(decoded_imm),
+
+    .is_load(is_load),
+    .is_store(is_store),
+    .is_branch(is_branch),
+    .is_rtype(is_rtype),
+    .is_itype(is_itype),
+    .is_jal(is_jal),
+
+
+    .alu_ctrl(alu_ctrl)
+);
 
 // Register file connections
 logic [31:0] rd1, rd2; // Register read data
@@ -77,24 +105,13 @@ register_file rf(
 );
 
 ///////////////////////////////////////////
-// Immediate Generation (for I-type and S-type instructions)
-///////////////////////////////////////////
-logic [31:0] imm_i, imm_s; // Immediate value for I-type and S-type instructions
-
-assign imm_i = { {20{if_id_instr[31]}}, if_id_instr[31:20] }; // Sign-extend I-type immediate
-
-assign imm_s = 
-            { {20{if_id_instr[31]}},
-                if_id_instr[31:25],
-                if_id_instr[11:7] };
-
-
-
-///////////////////////////////////////////
 // STALL LOGIC (for load-use hazard)
 ///////////////////////////////////////////
+logic [6:0] id_ex_opcode;
+logic [4:0] id_ex_rd;
+
 assign stall = 
-    (id_ex_opcode == 7'b0000011) && // Load instruction in EX stage
+    (id_ex_opcode == OPCODE_LOAD) && // Load instruction in EX stage
     (
         (id_ex_rd != 0) &&
         (
@@ -107,9 +124,8 @@ assign stall =
 ///////////////////////////////////////////
 logic [31:0] id_ex_rd1, id_ex_rd2;
 logic [31:0] id_ex_imm;
-logic [4:0] id_ex_rd;
-logic [6:0] id_ex_opcode;
 logic [4:0] id_ex_rs1, id_ex_rs2;
+logic [3:0] id_ex_alu_ctrl;
 
 always_ff @( posedge clk )
 begin
@@ -122,6 +138,7 @@ begin
         id_ex_opcode <= 0;
         id_ex_rs1 <= 0;
         id_ex_rs2 <= 0;
+        id_ex_alu_ctrl <= 0;
     end 
     else if (stall)
     begin
@@ -133,20 +150,18 @@ begin
         id_ex_opcode <= 0; // NOP
         id_ex_rs1 <= 0;
         id_ex_rs2 <= 0;
+        id_ex_alu_ctrl <= 0;
     end else
     begin
     
         id_ex_rd1 <= rd1;
         id_ex_rd2 <= rd2;
 
-        if(if_id_instr[6:0] == 7'b0100011)
-            id_ex_imm <= imm_s; // S-type instruction
-        else
-            id_ex_imm <= imm_i; // I-type instruction
+        id_ex_imm <= decoded_imm;
 
 
         id_ex_rd <= rd;
-        id_ex_opcode <= if_id_instr[6:0];
+        id_ex_opcode <= opcode;
         id_ex_rs1 <= rs1;
         id_ex_rs2 <= rs2;
     end
@@ -159,50 +174,31 @@ end
 logic [31:0] forward_a, forward_b;
 logic [1:0] forward_a_sel, forward_b_sel;
 
+
+logic [31:0] ex_mem_result;
+logic [4:0]  ex_mem_rd;
+logic [31:0] mem_wb_result;
+logic [4:0]  mem_wb_rd;
+
+
+
 always_comb begin
-    // Default
     forward_a_sel = 2'b00;
     forward_b_sel = 2'b00;
 
-    /////////////////////////////////
-    // Forward A (rs1)
-    /////////////////////////////////
-    if (mem_wb_rd != 5'd0 &&
-    mem_wb_rd == id_ex_rs1 &&
-    (mem_wb_opcode == 7'b0010011 ||
-     mem_wb_opcode == 7'b0110011 ||
-     mem_wb_opcode == 7'b0000011)) begin
+    // A
+    if (mem_wb_rd != 0 && mem_wb_rd == id_ex_rs1)
+        forward_a_sel = 2'b01;
+    else if (ex_mem_rd != 0 && ex_mem_rd == id_ex_rs1)
+        forward_a_sel = 2'b10;
 
-    forward_a_sel = 2'b01;
-
-    end else if (ex_mem_rd != 5'd0 &&
-             ex_mem_rd == id_ex_rs1 &&
-             (ex_mem_opcode == 7'b0010011 ||
-              ex_mem_opcode == 7'b0110011)) begin
-
-    forward_a_sel = 2'b10;
-    end
-
-    /////////////////////////////////
-    // Forward B (rs2)
-    /////////////////////////////////
-    if (mem_wb_rd != 5'd0 &&
-        mem_wb_rd == id_ex_rs2 &&
-    (mem_wb_opcode == 7'b0010011 ||
-     mem_wb_opcode == 7'b0110011 ||
-     mem_wb_opcode == 7'b0000011)) begin
-
-    forward_b_sel = 2'b01;
-
-    end else if (ex_mem_rd != 5'd0 &&
-             ex_mem_rd == id_ex_rs2 &&
-             (ex_mem_opcode == 7'b0010011 ||
-              ex_mem_opcode == 7'b0110011)) begin
-
-    forward_b_sel = 2'b10;
-    end
-
+    // B
+    if (mem_wb_rd != 0 && mem_wb_rd == id_ex_rs2)
+        forward_b_sel = 2'b01;
+    else if (ex_mem_rd != 0 && ex_mem_rd == id_ex_rs2)
+        forward_b_sel = 2'b10;
 end
+
 
 ///////////////////////////////////////////
 // Forwarding MUX
@@ -223,6 +219,7 @@ always_comb begin
         2'b01: forward_b = mem_wb_result;
         default: forward_b = id_ex_rd2;
     endcase
+
 end
 
 ///////////////////////////////////////////
@@ -232,24 +229,23 @@ end
 // ALU Signals
 logic [31:0] alu_result;
 
-logic ex_is_imm; // Indicates if the instruction uses an immediate operand
-logic ex_is_load, ex_is_store; // Indicates if the instruction is a load or store
-assign ex_is_imm = (id_ex_opcode == 7'b0010011); // ADDI opcode
-assign ex_is_load = (id_ex_opcode == 7'b0000011); // LW opcode
-assign ex_is_store = (id_ex_opcode == 7'b0100011); // SW opcode
+logic ex_is_imm, ex_is_load, ex_is_store; // Indicates if the instruction uses an immediate operand
+assign ex_is_imm = (id_ex_opcode == OPCODE_I_TYPE); // ADDI opcode
+assign ex_is_load = (id_ex_opcode == OPCODE_LOAD); // LW opcode
+assign ex_is_store = (id_ex_opcode == OPCODE_STORE); // SW opcode
 
 // ALU
 alu alu_inst(
     .a(forward_a),
-    .b( (ex_is_imm || ex_is_load || ex_is_store) ? id_ex_imm : forward_b),
+    .b( ex_is_imm || ex_is_load || ex_is_store ? id_ex_imm : forward_b),
+    .alu_ctrl(id_ex_alu_ctrl),
     .result(alu_result)
 );
+
 ///////////////////////////////////////////
 // EX/MEM Pipeline Registers
 ///////////////////////////////////////////
 
-logic [31:0] ex_mem_result;
-logic [4:0] ex_mem_rd;
 logic [6:0] ex_mem_opcode;
 logic [31:0] ex_mem_store_data; // For store instructions, we need to pass the value to be stored
 
@@ -276,14 +272,14 @@ end
 ///////////////////////////////////////////
 logic mem_we; // Memory write enable
 logic mem_re; // Memory read enable
+logic is_mem_load, is_mem_store;
 logic [31:0] mem_read_data; // Data read from memory
 
-logic is_load, is_store; // detect load/store instructions
-assign is_load = (ex_mem_opcode == 7'b0000011); // Load opcode
-assign is_store = (ex_mem_opcode == 7'b0100011); // Store opcode
+assign is_mem_load = (ex_mem_opcode == OPCODE_LOAD); // Load opcode
+assign is_mem_store = (ex_mem_opcode == OPCODE_STORE); // Store opcode
 
-assign mem_we = is_store; // Enable memory write for store instructions
-assign mem_re = is_load; // Enable memory read for load instructions
+assign mem_we = is_mem_store; // Enable memory write for store instructions
+assign mem_re = is_mem_load; // Enable memory read for load instructions
 
 // Data Memory instance
 data_memory dmem(
@@ -295,14 +291,10 @@ data_memory dmem(
     .read_data(mem_read_data) // Capture data read from memory
 );
 
-
-
 ///////////////////////////////////////////
 // MEM/WB Pipeline Registers
 ///////////////////////////////////////////
 
-logic [31:0] mem_wb_result;
-logic [4:0] mem_wb_rd;
 logic [6:0] mem_wb_opcode;
 
 always_ff @( posedge clk )
@@ -314,7 +306,7 @@ begin
         mem_wb_opcode <= 0;
     end else 
     begin
-        if(is_load)
+        if(is_mem_load)
             mem_wb_result <= mem_read_data; // Pass memory read data to WB stage for load instructions
         else
             mem_wb_result <= ex_mem_result; // Pass ALU result to WB stage for non-load instructions
@@ -329,9 +321,9 @@ end
 
 // Enable writeback for ADD/ADDI instructions
 assign wb_we = 
-    (mem_wb_opcode == 7'b0010011) || // ADDI
-    (mem_wb_opcode == 7'b0110011) || // ADD
-    (mem_wb_opcode == 7'b0000011);   // Load
+    (mem_wb_opcode == OPCODE_R_TYPE) || // ADDI
+    (mem_wb_opcode == OPCODE_I_TYPE) || // ADD
+    (mem_wb_opcode == OPCODE_LOAD);   // Load
 
 
 // Destination Register

@@ -4,6 +4,7 @@
 #include "Vtb_cpu__pch.h"
 #include "Vtb_cpu.h"
 #include "Vtb_cpu___024root.h"
+#include "Vtb_cpu___024unit.h"
 
 // FUNCTIONS
 Vtb_cpu__Syms::~Vtb_cpu__Syms()

@@ -15,6 +15,7 @@
 
 // INCLUDE MODULE CLASSES
 #include "Vtb_cpu___024root.h"
+#include "Vtb_cpu___024unit.h"
 
 // SYMS CLASS (contains all model state)
 class alignas(VL_CACHE_LINE_BYTES)Vtb_cpu__Syms final : public VerilatedSyms {
