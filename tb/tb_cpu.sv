@@ -41,8 +41,10 @@ always_ff @(posedge clk) begin
         // ✅ Better pipeline visibility
         //////////////////////////////////////////////////////
         
+        
+        
         $display(
-        "C=%0d\n | IF=%h\n | ID=%h RAW(rd1=%0d rd2=%0d)\n | FWD_A=%0d FWD_B=%0d\n | SEL_A=%b SEL_B=%b\n | EX_OUT=%0d | WB(rd=%0d data=%0d) | STALL=%b",
+        "C=%0d\n | IF=%h\n | ID=%h\n | EX(src rs1=%0d rs2=%0d | raw1=%0d raw2=%0d)\n | FWD(a=%0d b=%0d)\n | SEL(a=%b b=%b)\n | EX_OUT=%0d\n | WB(we=%b rd=%0d data=%0d)\n | STALL=%b",
         cycle,
         uut.instr,
         uut.if_id_instr,
@@ -55,10 +57,13 @@ always_ff @(posedge clk) begin
         uut.forward_a_sel,
         uut.forward_b_sel,
         uut.alu_result,
+        uut.wb_we,
         uut.mem_wb_rd,
         uut.mem_wb_result,
         uut.stall
+
         );
+
 
 
         //////////////////////////////////////////////////////
