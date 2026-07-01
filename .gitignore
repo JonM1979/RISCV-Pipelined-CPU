@@ -1,9 +1,11 @@
 #Verilator build output
 obj_dir/
+sim/obj_dir/
 
 #Simulation logs
 *.log
 sim_output.txt
+sim/sim_output.txt
 
 # Waveform files, when generated
 *.vcd
