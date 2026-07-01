@@ -28,6 +28,11 @@ class alignas(VL_CACHE_LINE_BYTES)Vtb_cpu__Syms final : public VerilatedSyms {
     // MODULE INSTANCE STATE
     Vtb_cpu___024root              TOP;
 
+    // SCOPE NAMES
+    VerilatedScope __Vscope_tb_cpu;
+    VerilatedScope __Vscope_tb_cpu__open_output_files;
+    VerilatedScope __Vscope_tb_cpu__update_counters;
+
     // CONSTRUCTORS
     Vtb_cpu__Syms(VerilatedContext* contextp, const char* namep, Vtb_cpu* modelp);
     ~Vtb_cpu__Syms();

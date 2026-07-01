@@ -1,0 +1,11 @@
+#Verilator build output
+obj_dir/
+
+#Simulation logs
+*.log
+sim_output.txt
+
+# Waveform files, when generated
+*.vcd
+*.fst
+*.vvp

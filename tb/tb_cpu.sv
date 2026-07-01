@@ -1,79 +1,74 @@
+`include "defines.svh"
+`include "disassemble.svh"
+
 module tb_cpu;
 
-logic [31:0] cycle;
-logic clk;
-logic reset;
+// TESTBENCH DECLARATIONS
+`include "tb_declarations.svh"
 
-// Instantiate CPU
+// DUT (Device Under Test) Instantiation
 cpu_top uut (
     .clk(clk),
     .reset(reset)
 );
 
-////////////////////////////////////////////////////////
-// Clock generator
-////////////////////////////////////////////////////////
+// INCLUDE TASKS FILES
+`include "tb_helper_functions.svh"
+`include "tb_performance_events.svh"
+
+`include "summary_task.svh"
+`include "instruction_trace.svh"
+`include "data_trace.svh"
+`include "tb_init_tasks.svh"
+`include "tb_counter_update.svh"
+
+// CLOCK GENERATOR
 always #5 clk <= ~clk;
 
-////////////////////////////////////////////////////////
-// Simulation control
-////////////////////////////////////////////////////////
+// SIMULATION CONTROL
 initial begin
+
+    open_output_files();
+    initialize_counters();
+
     clk = 0;
     reset = 1;
-    cycle = 0;
 
     #10;
     reset = 0;
 
-    #100;
-    $finish;
+    // Safety timeout, if HALT instr never reaches WB
+    // this prevents infinite simulation
+    repeat (300) @(posedge clk);
+
+    $fatal(1, "TIMEOUT: HALT instruction did not reach WB stage");
+
 end
 
-////////////////////////////////////////////////////////
-// Corrected Pipeline-Aware Display + Checks
-////////////////////////////////////////////////////////
+// COUNTER UPDATES
 always_ff @(posedge clk) begin
     if (!reset) begin
-        cycle <= cycle + 1;
+        update_counters();
+    end
+end
 
-        //////////////////////////////////////////////////////
-        // ✅ Better pipeline visibility
-        //////////////////////////////////////////////////////
-        
-        
-        
-        $display(
-        "C=%0d\n | IF=%h\n | ID=%h\n | EX(src rs1=%0d rs2=%0d | raw1=%0d raw2=%0d)\n | FWD(a=%0d b=%0d)\n | SEL(a=%b b=%b)\n | EX_OUT=%0d\n | WB(we=%b rd=%0d data=%0d)\n | STALL=%b",
-        cycle,
-        uut.instr,
-        uut.if_id_instr,
-        uut.id_ex_rs1,
-        uut.id_ex_rs2,
-        uut.id_ex_rd1,
-        uut.id_ex_rd2,
-        uut.forward_a,
-        uut.forward_b,
-        uut.forward_a_sel,
-        uut.forward_b_sel,
-        uut.alu_result,
-        uut.wb_we,
-        uut.mem_wb_rd,
-        uut.mem_wb_result,
-        uut.stall
+// TRACE + SIMULATION END
+// print on negative edge after values of
+// registers, signals, etc. have updated
+always @(negedge clk) begin
+    if (!reset) begin
+        instruction_trace();
+        data_trace();
 
-        );
+        // End only after HALT is visibly in WB in the trace
+        if (uut.mem_wb_instr == HALT_INSTR) begin
+            $fdisplay(instruction_file, "\nHALT reached WB stage. Ending simulation.");
+            $fdisplay(trace_file, "\nHALT reached WB stage. Ending simulation.");
 
+            final_summary();
+            close_output_files();
 
-
-        //////////////////////////////////////////////////////
-        // ✅ Pipeline validity check (correct version)
-        //////////////////////////////////////////////////////
-        if (cycle > 0) begin
-            // Check for invalid (X) values only
-            if (^uut.if_id_instr === 1'bx) begin
-                $fatal("ERROR: IF/ID contains invalid (X) value");
-            end
+            $finish;
         end
     end
 end

@@ -1,0 +1,275 @@
+Cleaning old build..
+Compiling...
+make: Entering directory '/workspaces/RISCV-Pipelined-CPU/sim/obj_dir'
+g++  -I.  -MMD -I/usr/share/verilator/include -I/usr/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-overloaded-virtual -Wno-shadow -Wno-sign-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable       -fcoroutines -Os -c -o sim_main.o ../sim_main.cpp
+g++ -Os  -I.  -MMD -I/usr/share/verilator/include -I/usr/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-overloaded-virtual -Wno-shadow -Wno-sign-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable       -fcoroutines -c -o verilated.o /usr/share/verilator/include/verilated.cpp
+g++ -Os  -I.  -MMD -I/usr/share/verilator/include -I/usr/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-overloaded-virtual -Wno-shadow -Wno-sign-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable       -fcoroutines -c -o verilated_timing.o /usr/share/verilator/include/verilated_timing.cpp
+g++ -Os  -I.  -MMD -I/usr/share/verilator/include -I/usr/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-overloaded-virtual -Wno-shadow -Wno-sign-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable       -fcoroutines -c -o verilated_threads.o /usr/share/verilator/include/verilated_threads.cpp
+/usr/bin/python3 /usr/share/verilator/bin/verilator_includer -DVL_INCLUDE_OPT=include Vtb_cpu.cpp Vtb_cpu___024root__DepSet_hb01ab115__0.cpp Vtb_cpu___024root__DepSet_h4201e8b7__0.cpp Vtb_cpu___024root__Slow.cpp Vtb_cpu___024root__DepSet_hb01ab115__0__Slow.cpp Vtb_cpu___024root__DepSet_h4201e8b7__0__Slow.cpp Vtb_cpu___024unit__Slow.cpp Vtb_cpu___024unit__DepSet_hc1ed72f2__0__Slow.cpp Vtb_cpu__Syms.cpp > Vtb_cpu__ALL.cpp
+g++ -Os  -I.  -MMD -I/usr/share/verilator/include -I/usr/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-overloaded-virtual -Wno-shadow -Wno-sign-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable       -fcoroutines -c -o Vtb_cpu__ALL.o Vtb_cpu__ALL.cpp
+echo "" > Vtb_cpu__ALL.verilator_deplist.tmp
+Archive ar -rcs Vtb_cpu__ALL.a Vtb_cpu__ALL.o
+g++     sim_main.o verilated.o verilated_timing.o verilated_threads.o Vtb_cpu__ALL.a    -pthread -lpthread -latomic   -o Vtb_cpu
+rm Vtb_cpu__ALL.verilator_deplist.tmp
+make: Leaving directory '/workspaces/RISCV-Pipelined-CPU/sim/obj_dir'
+Running simulation...
+
+[C=0 PC=00000000 STALL=0 CTRL=0 TARGET=00000000 BR=0 JAL=0]
+ IF : instr=00c00093
+ ID : instr=00000000 op=00 f3=0 f7=00 rs1=x0 rs2=x0 rd=x0 imm=0 | R=0 I=0 LD=0 ST=0 BR=0 JAL=0 | alu=0
+ EX : rs1=x0 rs2=x0 raw1=0 raw2=0 fwdA=0 fwdB=0 selA=00 selB=00 useImm=0 aluOut=0
+ MEM: op=00 addr=00000000 mem_re=0 mem_we=0 wdata=0 rdata=0
+ WB : we=0 rd=x0 data=0 op=00 jal=0 pc+4=00000000
+
+[C=1 PC=00000004 STALL=0 CTRL=0 TARGET=00000000 BR=0 JAL=0]
+ IF : instr=00500113
+ ID : instr=00c00093 op=13 f3=0 f7=00 rs1=x0 rs2=x12 rd=x1 imm=12 | R=0 I=1 LD=0 ST=0 BR=0 JAL=0 | alu=0
+ EX : rs1=x0 rs2=x0 raw1=0 raw2=0 fwdA=0 fwdB=0 selA=00 selB=00 useImm=0 aluOut=0
+ MEM: op=00 addr=00000000 mem_re=0 mem_we=0 wdata=0 rdata=0
+ WB : we=0 rd=x0 data=0 op=00 jal=0 pc+4=00000000
+
+[C=2 PC=00000008 STALL=0 CTRL=0 TARGET=0000000c BR=0 JAL=0]
+ IF : instr=002081b3
+ ID : instr=00500113 op=13 f3=0 f7=00 rs1=x0 rs2=x5 rd=x2 imm=5 | R=0 I=1 LD=0 ST=0 BR=0 JAL=0 | alu=0
+ EX : rs1=x0 rs2=x12 raw1=0 raw2=0 fwdA=0 fwdB=0 selA=00 selB=00 useImm=1 aluOut=12
+ MEM: op=00 addr=00000000 mem_re=0 mem_we=0 wdata=0 rdata=0
+ WB : we=0 rd=x0 data=0 op=00 jal=0 pc+4=00000004
+
+[C=3 PC=0000000c STALL=0 CTRL=0 TARGET=00000009 BR=0 JAL=0]
+ IF : instr=40208233
+ ID : instr=002081b3 op=33 f3=0 f7=00 rs1=x1 rs2=x2 rd=x3 imm=0 | R=1 I=0 LD=0 ST=0 BR=0 JAL=0 | alu=0
+ EX : rs1=x0 rs2=x5 raw1=0 raw2=0 fwdA=0 fwdB=0 selA=00 selB=00 useImm=1 aluOut=5
+ MEM: op=13 addr=0000000c mem_re=0 mem_we=0 wdata=0 rdata=0
+ WB : we=0 rd=x0 data=0 op=00 jal=0 pc+4=00000004
+
+[C=4 PC=00000010 STALL=0 CTRL=0 TARGET=00000008 BR=0 JAL=0]
+ IF : instr=0020f2b3
+ ID : instr=40208233 op=33 f3=0 f7=20 rs1=x1 rs2=x2 rd=x4 imm=0 | R=1 I=0 LD=0 ST=0 BR=0 JAL=0 | alu=1
+ EX : rs1=x1 rs2=x2 raw1=0 raw2=0 fwdA=12 fwdB=5 selA=01 selB=10 useImm=0 aluOut=17
+ MEM: op=13 addr=00000005 mem_re=0 mem_we=0 wdata=0 rdata=0
+ WB : we=1 rd=x1 data=12 op=13 jal=0 pc+4=00000004
+
+[C=5 PC=00000014 STALL=0 CTRL=0 TARGET=0000000c BR=0 JAL=0]
+ IF : instr=0020e333
+ ID : instr=0020f2b3 op=33 f3=7 f7=00 rs1=x1 rs2=x2 rd=x5 imm=0 | R=1 I=0 LD=0 ST=0 BR=0 JAL=0 | alu=9
+ EX : rs1=x1 rs2=x2 raw1=12 raw2=0 fwdA=12 fwdB=5 selA=00 selB=01 useImm=0 aluOut=7
+ MEM: op=33 addr=00000011 mem_re=0 mem_we=0 wdata=5 rdata=0
+ WB : we=1 rd=x2 data=5 op=13 jal=0 pc+4=00000008
+
+[C=6 PC=00000018 STALL=0 CTRL=0 TARGET=00000010 BR=0 JAL=0]
+ IF : instr=0020c3b3
+ ID : instr=0020e333 op=33 f3=6 f7=00 rs1=x1 rs2=x2 rd=x6 imm=0 | R=1 I=0 LD=0 ST=0 BR=0 JAL=0 | alu=8
+ EX : rs1=x1 rs2=x2 raw1=12 raw2=5 fwdA=12 fwdB=5 selA=00 selB=00 useImm=0 aluOut=4
+ MEM: op=33 addr=00000007 mem_re=0 mem_we=0 wdata=5 rdata=0
+ WB : we=1 rd=x3 data=17 op=33 jal=0 pc+4=0000000c
+
+[C=7 PC=0000001c STALL=0 CTRL=0 TARGET=00000014 BR=0 JAL=0]
+ IF : instr=00100713
+ ID : instr=0020c3b3 op=33 f3=4 f7=00 rs1=x1 rs2=x2 rd=x7 imm=0 | R=1 I=0 LD=0 ST=0 BR=0 JAL=0 | alu=5
+ EX : rs1=x1 rs2=x2 raw1=12 raw2=5 fwdA=12 fwdB=5 selA=00 selB=00 useImm=0 aluOut=13
+ MEM: op=33 addr=00000004 mem_re=0 mem_we=0 wdata=5 rdata=0
+ WB : we=1 rd=x4 data=7 op=33 jal=0 pc+4=00000010
+
+[C=8 PC=00000020 STALL=0 CTRL=0 TARGET=00000018 BR=0 JAL=0]
+ IF : instr=02000793
+ ID : instr=00100713 op=13 f3=0 f7=00 rs1=x0 rs2=x1 rd=x14 imm=1 | R=0 I=1 LD=0 ST=0 BR=0 JAL=0 | alu=0
+ EX : rs1=x1 rs2=x2 raw1=12 raw2=5 fwdA=12 fwdB=5 selA=00 selB=00 useImm=0 aluOut=9
+ MEM: op=33 addr=0000000d mem_re=0 mem_we=0 wdata=5 rdata=0
+ WB : we=1 rd=x5 data=4 op=33 jal=0 pc+4=00000014
+
+[C=9 PC=00000024 STALL=0 CTRL=0 TARGET=0000001d BR=0 JAL=0]
+ IF : instr=00e79833
+ ID : instr=02000793 op=13 f3=0 f7=01 rs1=x0 rs2=x0 rd=x15 imm=32 | R=0 I=1 LD=0 ST=0 BR=0 JAL=0 | alu=0
+ EX : rs1=x0 rs2=x1 raw1=0 raw2=12 fwdA=0 fwdB=12 selA=00 selB=00 useImm=1 aluOut=1
+ MEM: op=33 addr=00000009 mem_re=0 mem_we=0 wdata=5 rdata=0
+ WB : we=1 rd=x6 data=13 op=33 jal=0 pc+4=00000018
+
+[C=10 PC=00000028 STALL=0 CTRL=0 TARGET=00000040 BR=0 JAL=0]
+ IF : instr=00e7d8b3
+ ID : instr=00e79833 op=33 f3=1 f7=00 rs1=x15 rs2=x14 rd=x16 imm=0 | R=1 I=0 LD=0 ST=0 BR=0 JAL=0 | alu=2
+ EX : rs1=x0 rs2=x0 raw1=0 raw2=0 fwdA=0 fwdB=0 selA=00 selB=00 useImm=1 aluOut=32
+ MEM: op=13 addr=00000001 mem_re=0 mem_we=0 wdata=12 rdata=0
+ WB : we=1 rd=x7 data=9 op=33 jal=0 pc+4=0000001c
+
+[C=11 PC=0000002c STALL=0 CTRL=0 TARGET=00000024 BR=0 JAL=0]
+ IF : instr=ff800913
+ ID : instr=00e7d8b3 op=33 f3=5 f7=00 rs1=x15 rs2=x14 rd=x17 imm=0 | R=1 I=0 LD=0 ST=0 BR=0 JAL=0 | alu=6
+ EX : rs1=x15 rs2=x14 raw1=0 raw2=0 fwdA=32 fwdB=1 selA=10 selB=01 useImm=0 aluOut=64
+ MEM: op=13 addr=00000020 mem_re=0 mem_we=0 wdata=0 rdata=0
+ WB : we=1 rd=x14 data=1 op=13 jal=0 pc+4=00000020
+
+[C=12 PC=00000030 STALL=0 CTRL=0 TARGET=00000028 BR=0 JAL=0]
+ IF : instr=40e959b3
+ ID : instr=ff800913 op=13 f3=0 f7=7f rs1=x0 rs2=x24 rd=x18 imm=4294967288 | R=0 I=1 LD=0 ST=0 BR=0 JAL=0 | alu=0
+ EX : rs1=x15 rs2=x14 raw1=0 raw2=1 fwdA=32 fwdB=1 selA=01 selB=00 useImm=0 aluOut=16
+ MEM: op=33 addr=00000040 mem_re=0 mem_we=0 wdata=1 rdata=0
+ WB : we=1 rd=x15 data=32 op=13 jal=0 pc+4=00000024
+
+[C=13 PC=00000034 STALL=0 CTRL=0 TARGET=00000024 BR=0 JAL=0]
+ IF : instr=00112a33
+ ID : instr=40e959b3 op=33 f3=5 f7=20 rs1=x18 rs2=x14 rd=x19 imm=0 | R=1 I=0 LD=0 ST=0 BR=0 JAL=0 | alu=7
+ EX : rs1=x0 rs2=x24 raw1=0 raw2=0 fwdA=0 fwdB=0 selA=00 selB=00 useImm=1 aluOut=4294967288
+ MEM: op=33 addr=00000010 mem_re=0 mem_we=0 wdata=1 rdata=0
+ WB : we=1 rd=x16 data=64 op=33 jal=0 pc+4=00000028
+
+[C=14 PC=00000038 STALL=0 CTRL=0 TARGET=00000030 BR=0 JAL=0]
+ IF : instr=00113ab3
+ ID : instr=00112a33 op=33 f3=2 f7=00 rs1=x2 rs2=x1 rd=x20 imm=0 | R=1 I=0 LD=0 ST=0 BR=0 JAL=0 | alu=3
+ EX : rs1=x18 rs2=x14 raw1=0 raw2=1 fwdA=4294967288 fwdB=1 selA=10 selB=00 useImm=0 aluOut=4294967292
+ MEM: op=13 addr=fffffff8 mem_re=0 mem_we=0 wdata=0 rdata=0
+ WB : we=1 rd=x17 data=16 op=33 jal=0 pc+4=0000002c
+
+[C=15 PC=0000003c STALL=0 CTRL=0 TARGET=00000034 BR=0 JAL=0]
+ IF : instr=00302023
+ ID : instr=00113ab3 op=33 f3=3 f7=00 rs1=x2 rs2=x1 rd=x21 imm=0 | R=1 I=0 LD=0 ST=0 BR=0 JAL=0 | alu=4
+ EX : rs1=x2 rs2=x1 raw1=5 raw2=12 fwdA=5 fwdB=12 selA=00 selB=00 useImm=0 aluOut=1
+ MEM: op=33 addr=fffffffc mem_re=0 mem_we=0 wdata=1 rdata=0
+ WB : we=1 rd=x18 data=4294967288 op=13 jal=0 pc+4=00000030
+
+[C=16 PC=00000040 STALL=0 CTRL=0 TARGET=00000038 BR=0 JAL=0]
+ IF : instr=00002b03
+ ID : instr=00302023 op=23 f3=2 f7=00 rs1=x0 rs2=x3 rd=x0 imm=0 | R=0 I=0 LD=0 ST=1 BR=0 JAL=0 | alu=0
+ EX : rs1=x2 rs2=x1 raw1=5 raw2=12 fwdA=5 fwdB=12 selA=00 selB=00 useImm=0 aluOut=1
+ MEM: op=33 addr=00000001 mem_re=0 mem_we=0 wdata=12 rdata=0
+ WB : we=1 rd=x19 data=4294967292 op=33 jal=0 pc+4=00000034
+
+[C=17 PC=00000044 STALL=0 CTRL=0 TARGET=0000003c BR=0 JAL=0]
+ IF : instr=001b0bb3
+ ID : instr=00002b03 op=03 f3=2 f7=00 rs1=x0 rs2=x0 rd=x22 imm=0 | R=0 I=0 LD=1 ST=0 BR=0 JAL=0 | alu=0
+ EX : rs1=x0 rs2=x3 raw1=0 raw2=17 fwdA=0 fwdB=17 selA=00 selB=00 useImm=1 aluOut=0
+ MEM: op=33 addr=00000001 mem_re=0 mem_we=0 wdata=12 rdata=0
+ WB : we=1 rd=x20 data=1 op=33 jal=0 pc+4=00000038
+
+[C=18 PC=00000048 STALL=1 CTRL=0 TARGET=00000040 BR=0 JAL=0]
+ IF : instr=017b8463
+ ID : instr=001b0bb3 op=33 f3=0 f7=00 rs1=x22 rs2=x1 rd=x23 imm=0 | R=1 I=0 LD=0 ST=0 BR=0 JAL=0 | alu=0
+ EX : rs1=x0 rs2=x0 raw1=0 raw2=0 fwdA=0 fwdB=0 selA=00 selB=00 useImm=1 aluOut=0
+ MEM: op=23 addr=00000000 mem_re=0 mem_we=1 wdata=17 rdata=0
+ WB : we=1 rd=x21 data=1 op=33 jal=0 pc+4=0000003c
+
+[C=19 PC=00000048 STALL=0 CTRL=0 TARGET=00000000 BR=0 JAL=0]
+ IF : instr=017b8463
+ ID : instr=001b0bb3 op=33 f3=0 f7=00 rs1=x22 rs2=x1 rd=x23 imm=0 | R=1 I=0 LD=0 ST=0 BR=0 JAL=0 | alu=0
+ EX : rs1=x0 rs2=x0 raw1=0 raw2=0 fwdA=0 fwdB=0 selA=00 selB=00 useImm=0 aluOut=0
+ MEM: op=03 addr=00000000 mem_re=1 mem_we=0 wdata=0 rdata=17
+ WB : we=0 rd=x0 data=0 op=23 jal=0 pc+4=00000040
+
+[C=20 PC=0000004c STALL=0 CTRL=0 TARGET=00000044 BR=0 JAL=0]
+ IF : instr=06300c13
+ ID : instr=017b8463 op=63 f3=0 f7=00 rs1=x23 rs2=x23 rd=x8 imm=8 | R=0 I=0 LD=0 ST=0 BR=1 JAL=0 | alu=0
+ EX : rs1=x22 rs2=x1 raw1=0 raw2=12 fwdA=17 fwdB=12 selA=01 selB=00 useImm=0 aluOut=29
+ MEM: op=00 addr=00000000 mem_re=0 mem_we=0 wdata=0 rdata=0
+ WB : we=1 rd=x22 data=17 op=03 jal=0 pc+4=00000044
+
+[C=21 PC=00000050 STALL=0 CTRL=1 TARGET=00000050 BR=1 JAL=0]
+ IF : instr=00100c13
+ ID : instr=06300c13 op=13 f3=0 f7=03 rs1=x0 rs2=x3 rd=x24 imm=99 | R=0 I=1 LD=0 ST=0 BR=0 JAL=0 | alu=0
+ EX : rs1=x23 rs2=x23 raw1=0 raw2=0 fwdA=29 fwdB=29 selA=10 selB=10 useImm=0 aluOut=58
+ MEM: op=33 addr=0000001d mem_re=0 mem_we=0 wdata=12 rdata=0
+ WB : we=0 rd=x0 data=0 op=00 jal=0 pc+4=00000004
+
+[C=22 PC=00000050 STALL=0 CTRL=0 TARGET=00000000 BR=0 JAL=0]
+ IF : instr=00100c13
+ ID : instr=00000000 op=00 f3=0 f7=00 rs1=x0 rs2=x0 rd=x0 imm=0 | R=0 I=0 LD=0 ST=0 BR=0 JAL=0 | alu=0
+ EX : rs1=x0 rs2=x0 raw1=0 raw2=0 fwdA=0 fwdB=0 selA=00 selB=00 useImm=0 aluOut=0
+ MEM: op=63 addr=0000003a mem_re=0 mem_we=0 wdata=29 rdata=0
+ WB : we=1 rd=x23 data=29 op=33 jal=0 pc+4=00000048
+
+[C=23 PC=00000054 STALL=0 CTRL=0 TARGET=00000000 BR=0 JAL=0]
+ IF : instr=00209463
+ ID : instr=00100c13 op=13 f3=0 f7=00 rs1=x0 rs2=x1 rd=x24 imm=1 | R=0 I=1 LD=0 ST=0 BR=0 JAL=0 | alu=0
+ EX : rs1=x0 rs2=x0 raw1=0 raw2=0 fwdA=0 fwdB=0 selA=00 selB=00 useImm=0 aluOut=0
+ MEM: op=00 addr=00000000 mem_re=0 mem_we=0 wdata=0 rdata=0
+ WB : we=0 rd=x8 data=58 op=63 jal=0 pc+4=0000004c
+
+[C=24 PC=00000058 STALL=0 CTRL=0 TARGET=00000051 BR=0 JAL=0]
+ IF : instr=05800c93
+ ID : instr=00209463 op=63 f3=1 f7=00 rs1=x1 rs2=x2 rd=x8 imm=8 | R=0 I=0 LD=0 ST=0 BR=1 JAL=0 | alu=0
+ EX : rs1=x0 rs2=x1 raw1=0 raw2=12 fwdA=0 fwdB=12 selA=00 selB=00 useImm=1 aluOut=1
+ MEM: op=00 addr=00000000 mem_re=0 mem_we=0 wdata=0 rdata=0
+ WB : we=0 rd=x0 data=0 op=00 jal=0 pc+4=00000004
+
+[C=25 PC=0000005c STALL=0 CTRL=1 TARGET=0000005c BR=1 JAL=0]
+ IF : instr=00200c93
+ ID : instr=05800c93 op=13 f3=0 f7=02 rs1=x0 rs2=x24 rd=x25 imm=88 | R=0 I=1 LD=0 ST=0 BR=0 JAL=0 | alu=0
+ EX : rs1=x1 rs2=x2 raw1=12 raw2=5 fwdA=12 fwdB=5 selA=00 selB=00 useImm=0 aluOut=17
+ MEM: op=13 addr=00000001 mem_re=0 mem_we=0 wdata=12 rdata=0
+ WB : we=0 rd=x0 data=0 op=00 jal=0 pc+4=00000004
+
+[C=26 PC=0000005c STALL=0 CTRL=0 TARGET=00000000 BR=0 JAL=0]
+ IF : instr=00200c93
+ ID : instr=00000000 op=00 f3=0 f7=00 rs1=x0 rs2=x0 rd=x0 imm=0 | R=0 I=0 LD=0 ST=0 BR=0 JAL=0 | alu=0
+ EX : rs1=x0 rs2=x0 raw1=0 raw2=0 fwdA=0 fwdB=0 selA=00 selB=00 useImm=0 aluOut=0
+ MEM: op=63 addr=00000011 mem_re=0 mem_we=0 wdata=5 rdata=0
+ WB : we=1 rd=x24 data=1 op=13 jal=0 pc+4=00000054
+
+[C=27 PC=00000060 STALL=0 CTRL=0 TARGET=00000000 BR=0 JAL=0]
+ IF : instr=00c00d6f
+ ID : instr=00200c93 op=13 f3=0 f7=00 rs1=x0 rs2=x2 rd=x25 imm=2 | R=0 I=1 LD=0 ST=0 BR=0 JAL=0 | alu=0
+ EX : rs1=x0 rs2=x0 raw1=0 raw2=0 fwdA=0 fwdB=0 selA=00 selB=00 useImm=0 aluOut=0
+ MEM: op=00 addr=00000000 mem_re=0 mem_we=0 wdata=0 rdata=0
+ WB : we=0 rd=x8 data=17 op=63 jal=0 pc+4=00000058
+
+[C=28 PC=00000064 STALL=0 CTRL=0 TARGET=0000005e BR=0 JAL=0]
+ IF : instr=04d00d93
+ ID : instr=00c00d6f op=6f f3=0 f7=00 rs1=x0 rs2=x12 rd=x26 imm=12 | R=0 I=0 LD=0 ST=0 BR=0 JAL=1 | alu=0
+ EX : rs1=x0 rs2=x2 raw1=0 raw2=5 fwdA=0 fwdB=5 selA=00 selB=00 useImm=1 aluOut=2
+ MEM: op=00 addr=00000000 mem_re=0 mem_we=0 wdata=0 rdata=0
+ WB : we=0 rd=x0 data=0 op=00 jal=0 pc+4=00000004
+
+[C=29 PC=00000068 STALL=0 CTRL=1 TARGET=0000006c BR=0 JAL=1]
+ IF : instr=05800e13
+ ID : instr=04d00d93 op=13 f3=0 f7=02 rs1=x0 rs2=x13 rd=x27 imm=77 | R=0 I=1 LD=0 ST=0 BR=0 JAL=0 | alu=0
+ EX : rs1=x0 rs2=x12 raw1=0 raw2=0 fwdA=0 fwdB=0 selA=00 selB=00 useImm=0 aluOut=0
+ MEM: op=13 addr=00000002 mem_re=0 mem_we=0 wdata=5 rdata=0
+ WB : we=0 rd=x0 data=0 op=00 jal=0 pc+4=00000004
+
+[C=30 PC=0000006c STALL=0 CTRL=0 TARGET=00000000 BR=0 JAL=0]
+ IF : instr=001d0e93
+ ID : instr=00000000 op=00 f3=0 f7=00 rs1=x0 rs2=x0 rd=x0 imm=0 | R=0 I=0 LD=0 ST=0 BR=0 JAL=0 | alu=0
+ EX : rs1=x0 rs2=x0 raw1=0 raw2=0 fwdA=0 fwdB=0 selA=00 selB=00 useImm=0 aluOut=0
+ MEM: op=6f addr=00000000 mem_re=0 mem_we=0 wdata=0 rdata=0
+ WB : we=1 rd=x25 data=2 op=13 jal=0 pc+4=00000060
+
+[C=31 PC=00000070 STALL=0 CTRL=0 TARGET=00000000 BR=0 JAL=0]
+ IF : instr=00000013
+ ID : instr=001d0e93 op=13 f3=0 f7=00 rs1=x26 rs2=x1 rd=x29 imm=1 | R=0 I=1 LD=0 ST=0 BR=0 JAL=0 | alu=0
+ EX : rs1=x0 rs2=x0 raw1=0 raw2=0 fwdA=0 fwdB=0 selA=00 selB=00 useImm=0 aluOut=0
+ MEM: op=00 addr=00000000 mem_re=0 mem_we=0 wdata=0 rdata=0
+ WB : we=1 rd=x26 data=100 op=6f jal=1 pc+4=00000064
+
+[C=32 PC=00000074 STALL=0 CTRL=0 TARGET=0000006d BR=0 JAL=0]
+ IF : instr=00000000
+ ID : instr=00000013 op=13 f3=0 f7=00 rs1=x0 rs2=x0 rd=x0 imm=0 | R=0 I=1 LD=0 ST=0 BR=0 JAL=0 | alu=0
+ EX : rs1=x26 rs2=x1 raw1=100 raw2=12 fwdA=100 fwdB=12 selA=00 selB=00 useImm=1 aluOut=101
+ MEM: op=00 addr=00000000 mem_re=0 mem_we=0 wdata=0 rdata=0
+ WB : we=0 rd=x0 data=0 op=00 jal=0 pc+4=00000004
+
+[C=33 PC=00000078 STALL=0 CTRL=0 TARGET=00000070 BR=0 JAL=0]
+ IF : instr=00000000
+ ID : instr=00000000 op=00 f3=0 f7=00 rs1=x0 rs2=x0 rd=x0 imm=0 | R=0 I=0 LD=0 ST=0 BR=0 JAL=0 | alu=0
+ EX : rs1=x0 rs2=x0 raw1=0 raw2=0 fwdA=0 fwdB=0 selA=00 selB=00 useImm=1 aluOut=0
+ MEM: op=13 addr=00000065 mem_re=0 mem_we=0 wdata=12 rdata=0
+ WB : we=0 rd=x0 data=0 op=00 jal=0 pc+4=00000004
+
+[C=34 PC=0000007c STALL=0 CTRL=0 TARGET=00000074 BR=0 JAL=0]
+ IF : instr=00000000
+ ID : instr=00000000 op=00 f3=0 f7=00 rs1=x0 rs2=x0 rd=x0 imm=0 | R=0 I=0 LD=0 ST=0 BR=0 JAL=0 | alu=0
+ EX : rs1=x0 rs2=x0 raw1=0 raw2=0 fwdA=0 fwdB=0 selA=00 selB=00 useImm=0 aluOut=0
+ MEM: op=13 addr=00000000 mem_re=0 mem_we=0 wdata=0 rdata=0
+ WB : we=1 rd=x29 data=101 op=13 jal=0 pc+4=00000070
+
+==================== FINAL CHECKS ====================
+PASS: full CPU stress test succeeded
+======================================================
+
+
+==================== FINAL SUMMARY ====================
+Cycles             : 35
+Retired Instr      : 24
+Stall Cycles       : 1
+Control Transfers  : 3
+CPI                : 1.458333
+=======================================================
+
+- ../rtl/../tb/tb_cpu.sv:58: Verilog $finish

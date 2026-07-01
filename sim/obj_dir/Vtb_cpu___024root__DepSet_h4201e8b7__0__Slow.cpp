@@ -19,12 +19,33 @@ VL_ATTR_COLD void Vtb_cpu___024root___eval_initial__TOP(Vtb_cpu___024root* vlSel
     IData/*31:0*/ tb_cpu__DOT__uut__DOT__dmem__DOT__unnamedblk1__DOT__i;
     tb_cpu__DOT__uut__DOT__dmem__DOT__unnamedblk1__DOT__i = 0;
     // Body
-    vlSelf->tb_cpu__DOT__uut__DOT__imem_inst__DOT__mem[0U] = 0x500093U;
-    vlSelf->tb_cpu__DOT__uut__DOT__imem_inst__DOT__mem[1U] = 0x500113U;
-    vlSelf->tb_cpu__DOT__uut__DOT__imem_inst__DOT__mem[2U] = 0x208463U;
-    vlSelf->tb_cpu__DOT__uut__DOT__imem_inst__DOT__mem[3U] = 0x100193U;
-    vlSelf->tb_cpu__DOT__uut__DOT__imem_inst__DOT__mem[4U] = 0x900193U;
-    vlSelf->tb_cpu__DOT__uut__DOT__imem_inst__DOT__mem[5U] = 0U;
+    vlSelf->tb_cpu__DOT__uut__DOT__imem_inst__DOT__mem[0U] = 0xa00093U;
+    vlSelf->tb_cpu__DOT__uut__DOT__imem_inst__DOT__mem[1U] = 0x1400113U;
+    vlSelf->tb_cpu__DOT__uut__DOT__imem_inst__DOT__mem[2U] = 0x2081b3U;
+    vlSelf->tb_cpu__DOT__uut__DOT__imem_inst__DOT__mem[3U] = 0x118233U;
+    vlSelf->tb_cpu__DOT__uut__DOT__imem_inst__DOT__mem[4U] = 0x100293U;
+    vlSelf->tb_cpu__DOT__uut__DOT__imem_inst__DOT__mem[5U] = 0x218333U;
+    vlSelf->tb_cpu__DOT__uut__DOT__imem_inst__DOT__mem[6U] = 0x6203b3U;
+    vlSelf->tb_cpu__DOT__uut__DOT__imem_inst__DOT__mem[7U] = 0x438433U;
+    vlSelf->tb_cpu__DOT__uut__DOT__imem_inst__DOT__mem[8U] = 0x802223U;
+    vlSelf->tb_cpu__DOT__uut__DOT__imem_inst__DOT__mem[9U] = 0x402483U;
+    vlSelf->tb_cpu__DOT__uut__DOT__imem_inst__DOT__mem[0xaU] = 0x148533U;
+    vlSelf->tb_cpu__DOT__uut__DOT__imem_inst__DOT__mem[0xbU] = 0x500593U;
+    vlSelf->tb_cpu__DOT__uut__DOT__imem_inst__DOT__mem[0xcU] = 0xb58463U;
+    vlSelf->tb_cpu__DOT__uut__DOT__imem_inst__DOT__mem[0xdU] = 0x6300613U;
+    vlSelf->tb_cpu__DOT__uut__DOT__imem_inst__DOT__mem[0xeU] = 0xc00613U;
+    vlSelf->tb_cpu__DOT__uut__DOT__imem_inst__DOT__mem[0xfU] = 0xc02423U;
+    vlSelf->tb_cpu__DOT__uut__DOT__imem_inst__DOT__mem[0x10U] = 0x802683U;
+    vlSelf->tb_cpu__DOT__uut__DOT__imem_inst__DOT__mem[0x11U] = 0xc68463U;
+    vlSelf->tb_cpu__DOT__uut__DOT__imem_inst__DOT__mem[0x12U] = 0x4d00713U;
+    vlSelf->tb_cpu__DOT__uut__DOT__imem_inst__DOT__mem[0x13U] = 0xe00713U;
+    vlSelf->tb_cpu__DOT__uut__DOT__imem_inst__DOT__mem[0x14U] = 0xc007efU;
+    vlSelf->tb_cpu__DOT__uut__DOT__imem_inst__DOT__mem[0x15U] = 0x4200813U;
+    vlSelf->tb_cpu__DOT__uut__DOT__imem_inst__DOT__mem[0x16U] = 0x4d00893U;
+    vlSelf->tb_cpu__DOT__uut__DOT__imem_inst__DOT__mem[0x17U] = 0x178913U;
+    vlSelf->tb_cpu__DOT__uut__DOT__imem_inst__DOT__mem[0x18U] = 0x7b00013U;
+    vlSelf->tb_cpu__DOT__uut__DOT__imem_inst__DOT__mem[0x19U] = 0x1300993U;
+    vlSelf->tb_cpu__DOT__uut__DOT__imem_inst__DOT__mem[0x1aU] = 0x500013U;
     tb_cpu__DOT__uut__DOT__dmem__DOT__unnamedblk1__DOT__i = 0U;
     while (VL_GTS_III(32, 0x100U, tb_cpu__DOT__uut__DOT__dmem__DOT__unnamedblk1__DOT__i)) {
         vlSelf->tb_cpu__DOT__uut__DOT__dmem__DOT__mem[(0xffU 
@@ -61,7 +82,7 @@ VL_ATTR_COLD void Vtb_cpu___024root___eval_settle(Vtb_cpu___024root* vlSelf) {
 #ifdef VL_DEBUG
             Vtb_cpu___024root___dump_triggers__stl(vlSelf);
 #endif
-            VL_FATAL_MT("../rtl/../tb/tb_cpu.sv", 1, "", "Settle region did not converge.");
+            VL_FATAL_MT("../rtl/../tb/tb_cpu.sv", 4, "", "Settle region did not converge.");
         }
         __VstlIterCount = ((IData)(1U) + __VstlIterCount);
         __VstlContinue = 0U;
@@ -92,8 +113,16 @@ VL_ATTR_COLD void Vtb_cpu___024root___stl_sequent__TOP__0(Vtb_cpu___024root* vlS
     Vtb_cpu__Syms* const __restrict vlSymsp VL_ATTR_UNUSED = vlSelf->vlSymsp;
     VL_DEBUG_IF(VL_DBG_MSGF("+    Vtb_cpu___024root___stl_sequent__TOP__0\n"); );
     // Init
-    CData/*0:0*/ tb_cpu__DOT__uut__DOT__branch_cond_taken;
-    tb_cpu__DOT__uut__DOT__branch_cond_taken = 0;
+    CData/*0:0*/ tb_cpu__DOT__id_ex_valid_for_forwarding;
+    tb_cpu__DOT__id_ex_valid_for_forwarding = 0;
+    CData/*0:0*/ tb_cpu__DOT__id_ex_uses_rs1;
+    tb_cpu__DOT__id_ex_uses_rs1 = 0;
+    CData/*0:0*/ tb_cpu__DOT__id_ex_uses_rs2;
+    tb_cpu__DOT__id_ex_uses_rs2 = 0;
+    IData/*31:0*/ tb_cpu__DOT__uut__DOT__ex_mem_forward_data;
+    tb_cpu__DOT__uut__DOT__ex_mem_forward_data = 0;
+    CData/*0:0*/ tb_cpu__DOT__uut__DOT__ex_mem_regwrite;
+    tb_cpu__DOT__uut__DOT__ex_mem_regwrite = 0;
     IData/*31:0*/ tb_cpu__DOT__uut__DOT____Vcellinp__alu_inst__b;
     tb_cpu__DOT__uut__DOT____Vcellinp__alu_inst__b = 0;
     // Body
@@ -284,17 +313,11 @@ VL_ATTR_COLD void Vtb_cpu___024root___stl_sequent__TOP__0(Vtb_cpu___024root* vlS
                    | (0x23U == (0x7fU & vlSelf->tb_cpu__DOT__uut__DOT__if_id_instr))))) {
         vlSelf->tb_cpu__DOT__uut__DOT__alu_ctrl = 0U;
     }
-    vlSelf->tb_cpu__DOT__uut__DOT__wb_we = ((0x33U 
-                                             == (IData)(vlSelf->tb_cpu__DOT__uut__DOT__mem_wb_opcode)) 
-                                            | ((0x13U 
-                                                == (IData)(vlSelf->tb_cpu__DOT__uut__DOT__mem_wb_opcode)) 
-                                               | ((3U 
-                                                   == (IData)(vlSelf->tb_cpu__DOT__uut__DOT__mem_wb_opcode)) 
-                                                  | (0x6fU 
-                                                     == (IData)(vlSelf->tb_cpu__DOT__uut__DOT__mem_wb_opcode)))));
     vlSelf->tb_cpu__DOT__uut__DOT__instr = vlSelf->tb_cpu__DOT__uut__DOT__imem_inst__DOT__mem
         [(0xffU & (vlSelf->tb_cpu__DOT__uut__DOT__pc 
                    >> 2U))];
+    vlSelf->tb_cpu__DOT__uut__DOT__jal_target = (vlSelf->tb_cpu__DOT__uut__DOT__id_ex_imm 
+                                                 + vlSelf->tb_cpu__DOT__uut__DOT__id_ex_pc);
     vlSelf->tb_cpu__DOT__uut__DOT__stall = ((3U == (IData)(vlSelf->tb_cpu__DOT__uut__DOT__id_ex_opcode)) 
                                             & ((0U 
                                                 != (IData)(vlSelf->tb_cpu__DOT__uut__DOT__id_ex_rd)) 
@@ -308,68 +331,182 @@ VL_ATTR_COLD void Vtb_cpu___024root___stl_sequent__TOP__0(Vtb_cpu___024root* vlS
                                                      (0x1fU 
                                                       & (vlSelf->tb_cpu__DOT__uut__DOT__if_id_instr 
                                                          >> 0x14U))))));
+    vlSelf->tb_cpu__DOT__uut__DOT__mem_read_data = 
+        ((3U == (IData)(vlSelf->tb_cpu__DOT__uut__DOT__ex_mem_opcode))
+          ? vlSelf->tb_cpu__DOT__uut__DOT__dmem__DOT__mem
+         [(0xffU & (vlSelf->tb_cpu__DOT__uut__DOT__ex_mem_result 
+                    >> 2U))] : 0U);
+    vlSelf->tb_cpu__DOT__uut__DOT__ex_use_imm = ((IData)(vlSelf->tb_cpu__DOT__uut__DOT__id_ex_is_itype) 
+                                                 | ((IData)(vlSelf->tb_cpu__DOT__uut__DOT__id_ex_is_load) 
+                                                    | (IData)(vlSelf->tb_cpu__DOT__uut__DOT__id_ex_is_store)));
+    tb_cpu__DOT__id_ex_valid_for_forwarding = ((0U 
+                                                != vlSelf->tb_cpu__DOT__uut__DOT__id_ex_instr) 
+                                               & (0x500013U 
+                                                  != vlSelf->tb_cpu__DOT__uut__DOT__id_ex_instr));
+    vlSelf->tb_cpu__DOT__uut__DOT__wb_data = ((IData)(vlSelf->tb_cpu__DOT__uut__DOT__mem_wb_is_jal)
+                                               ? vlSelf->tb_cpu__DOT__uut__DOT__mem_wb_pc_plus_4
+                                               : vlSelf->tb_cpu__DOT__uut__DOT__mem_wb_result);
+    tb_cpu__DOT__uut__DOT__ex_mem_forward_data = ((IData)(vlSelf->tb_cpu__DOT__uut__DOT__ex_mem_is_jal)
+                                                   ? vlSelf->tb_cpu__DOT__uut__DOT__ex_mem_pc_plus_4
+                                                   : vlSelf->tb_cpu__DOT__uut__DOT__ex_mem_result);
+    vlSelf->tb_cpu__DOT__uut__DOT__wb_we = ((0x33U 
+                                             == (IData)(vlSelf->tb_cpu__DOT__uut__DOT__mem_wb_opcode)) 
+                                            | ((0x13U 
+                                                == (IData)(vlSelf->tb_cpu__DOT__uut__DOT__mem_wb_opcode)) 
+                                               | ((3U 
+                                                   == (IData)(vlSelf->tb_cpu__DOT__uut__DOT__mem_wb_opcode)) 
+                                                  | (0x6fU 
+                                                     == (IData)(vlSelf->tb_cpu__DOT__uut__DOT__mem_wb_opcode)))));
+    tb_cpu__DOT__uut__DOT__ex_mem_regwrite = ((0x33U 
+                                               == (IData)(vlSelf->tb_cpu__DOT__uut__DOT__ex_mem_opcode)) 
+                                              | ((0x13U 
+                                                  == (IData)(vlSelf->tb_cpu__DOT__uut__DOT__ex_mem_opcode)) 
+                                                 | (0x6fU 
+                                                    == (IData)(vlSelf->tb_cpu__DOT__uut__DOT__ex_mem_opcode))));
+    tb_cpu__DOT__id_ex_uses_rs1 = ((IData)(tb_cpu__DOT__id_ex_valid_for_forwarding) 
+                                   & ([&]() {
+                vlSelf->__Vfunc_tb_cpu__DOT__instr_uses_rs1__0__opcode 
+                    = vlSelf->tb_cpu__DOT__uut__DOT__id_ex_opcode;
+                {
+                    if ((0x40U & (IData)(vlSelf->__Vfunc_tb_cpu__DOT__instr_uses_rs1__0__opcode))) {
+                        if ((0x20U & (IData)(vlSelf->__Vfunc_tb_cpu__DOT__instr_uses_rs1__0__opcode))) {
+                            if ((0x10U & (IData)(vlSelf->__Vfunc_tb_cpu__DOT__instr_uses_rs1__0__opcode))) {
+                                vlSelf->__Vfunc_tb_cpu__DOT__instr_uses_rs1__0__Vfuncout = 0U;
+                                goto __Vlabel1;
+                            } else if ((8U & (IData)(vlSelf->__Vfunc_tb_cpu__DOT__instr_uses_rs1__0__opcode))) {
+                                vlSelf->__Vfunc_tb_cpu__DOT__instr_uses_rs1__0__Vfuncout = 0U;
+                                goto __Vlabel1;
+                            } else if ((4U & (IData)(vlSelf->__Vfunc_tb_cpu__DOT__instr_uses_rs1__0__opcode))) {
+                                vlSelf->__Vfunc_tb_cpu__DOT__instr_uses_rs1__0__Vfuncout = 0U;
+                                goto __Vlabel1;
+                            } else if ((2U & (IData)(vlSelf->__Vfunc_tb_cpu__DOT__instr_uses_rs1__0__opcode))) {
+                                if ((1U & (IData)(vlSelf->__Vfunc_tb_cpu__DOT__instr_uses_rs1__0__opcode))) {
+                                    vlSelf->__Vfunc_tb_cpu__DOT__instr_uses_rs1__0__Vfuncout = 1U;
+                                    goto __Vlabel1;
+                                } else {
+                                    vlSelf->__Vfunc_tb_cpu__DOT__instr_uses_rs1__0__Vfuncout = 0U;
+                                    goto __Vlabel1;
+                                }
+                            } else {
+                                vlSelf->__Vfunc_tb_cpu__DOT__instr_uses_rs1__0__Vfuncout = 0U;
+                                goto __Vlabel1;
+                            }
+                        } else {
+                            vlSelf->__Vfunc_tb_cpu__DOT__instr_uses_rs1__0__Vfuncout = 0U;
+                            goto __Vlabel1;
+                        }
+                    } else if ((8U & (IData)(vlSelf->__Vfunc_tb_cpu__DOT__instr_uses_rs1__0__opcode))) {
+                        vlSelf->__Vfunc_tb_cpu__DOT__instr_uses_rs1__0__Vfuncout = 0U;
+                        goto __Vlabel1;
+                    } else if ((4U & (IData)(vlSelf->__Vfunc_tb_cpu__DOT__instr_uses_rs1__0__opcode))) {
+                        vlSelf->__Vfunc_tb_cpu__DOT__instr_uses_rs1__0__Vfuncout = 0U;
+                        goto __Vlabel1;
+                    } else if ((2U & (IData)(vlSelf->__Vfunc_tb_cpu__DOT__instr_uses_rs1__0__opcode))) {
+                        if ((1U & (IData)(vlSelf->__Vfunc_tb_cpu__DOT__instr_uses_rs1__0__opcode))) {
+                            vlSelf->__Vfunc_tb_cpu__DOT__instr_uses_rs1__0__Vfuncout = 1U;
+                            goto __Vlabel1;
+                        } else {
+                            vlSelf->__Vfunc_tb_cpu__DOT__instr_uses_rs1__0__Vfuncout = 0U;
+                            goto __Vlabel1;
+                        }
+                    } else {
+                        vlSelf->__Vfunc_tb_cpu__DOT__instr_uses_rs1__0__Vfuncout = 0U;
+                        goto __Vlabel1;
+                    }
+                    __Vlabel1: ;
+                }
+            }(), (IData)(vlSelf->__Vfunc_tb_cpu__DOT__instr_uses_rs1__0__Vfuncout)));
+    tb_cpu__DOT__id_ex_uses_rs2 = ((IData)(tb_cpu__DOT__id_ex_valid_for_forwarding) 
+                                   & ([&]() {
+                vlSelf->__Vfunc_tb_cpu__DOT__instr_uses_rs2__1__opcode 
+                    = vlSelf->tb_cpu__DOT__uut__DOT__id_ex_opcode;
+                {
+                    if ((((0x33U == (IData)(vlSelf->__Vfunc_tb_cpu__DOT__instr_uses_rs2__1__opcode)) 
+                          || (0x23U == (IData)(vlSelf->__Vfunc_tb_cpu__DOT__instr_uses_rs2__1__opcode))) 
+                         || (0x63U == (IData)(vlSelf->__Vfunc_tb_cpu__DOT__instr_uses_rs2__1__opcode)))) {
+                        vlSelf->__Vfunc_tb_cpu__DOT__instr_uses_rs2__1__Vfuncout = 1U;
+                        goto __Vlabel2;
+                    } else {
+                        vlSelf->__Vfunc_tb_cpu__DOT__instr_uses_rs2__1__Vfuncout = 0U;
+                        goto __Vlabel2;
+                    }
+                    __Vlabel2: ;
+                }
+            }(), (IData)(vlSelf->__Vfunc_tb_cpu__DOT__instr_uses_rs2__1__Vfuncout)));
     vlSelf->tb_cpu__DOT__uut__DOT__forward_a_sel = 0U;
-    if ((((0U != (IData)(vlSelf->tb_cpu__DOT__uut__DOT__ex_mem_rd)) 
-          & ((IData)(vlSelf->tb_cpu__DOT__uut__DOT__ex_mem_rd) 
-             == (IData)(vlSelf->tb_cpu__DOT__uut__DOT__id_ex_rs1))) 
-         & (3U != (IData)(vlSelf->tb_cpu__DOT__uut__DOT__ex_mem_opcode)))) {
+    if ((((IData)(tb_cpu__DOT__uut__DOT__ex_mem_regwrite) 
+          & (0U != (IData)(vlSelf->tb_cpu__DOT__uut__DOT__ex_mem_rd))) 
+         & ((IData)(vlSelf->tb_cpu__DOT__uut__DOT__ex_mem_rd) 
+            == (IData)(vlSelf->tb_cpu__DOT__uut__DOT__id_ex_rs1)))) {
         vlSelf->tb_cpu__DOT__uut__DOT__forward_a_sel = 2U;
-    } else if (((0U != (IData)(vlSelf->tb_cpu__DOT__uut__DOT__mem_wb_rd)) 
+    } else if ((((IData)(vlSelf->tb_cpu__DOT__uut__DOT__wb_we) 
+                 & (0U != (IData)(vlSelf->tb_cpu__DOT__uut__DOT__mem_wb_rd))) 
                 & ((IData)(vlSelf->tb_cpu__DOT__uut__DOT__mem_wb_rd) 
                    == (IData)(vlSelf->tb_cpu__DOT__uut__DOT__id_ex_rs1)))) {
         vlSelf->tb_cpu__DOT__uut__DOT__forward_a_sel = 1U;
     }
     vlSelf->tb_cpu__DOT__uut__DOT__forward_b_sel = 0U;
-    if ((((0U != (IData)(vlSelf->tb_cpu__DOT__uut__DOT__ex_mem_rd)) 
-          & ((IData)(vlSelf->tb_cpu__DOT__uut__DOT__ex_mem_rd) 
-             == (IData)(vlSelf->tb_cpu__DOT__uut__DOT__id_ex_rs2))) 
-         & (3U != (IData)(vlSelf->tb_cpu__DOT__uut__DOT__ex_mem_opcode)))) {
+    if ((((IData)(tb_cpu__DOT__uut__DOT__ex_mem_regwrite) 
+          & (0U != (IData)(vlSelf->tb_cpu__DOT__uut__DOT__ex_mem_rd))) 
+         & ((IData)(vlSelf->tb_cpu__DOT__uut__DOT__ex_mem_rd) 
+            == (IData)(vlSelf->tb_cpu__DOT__uut__DOT__id_ex_rs2)))) {
         vlSelf->tb_cpu__DOT__uut__DOT__forward_b_sel = 2U;
-    } else if (((0U != (IData)(vlSelf->tb_cpu__DOT__uut__DOT__mem_wb_rd)) 
+    } else if ((((IData)(vlSelf->tb_cpu__DOT__uut__DOT__wb_we) 
+                 & (0U != (IData)(vlSelf->tb_cpu__DOT__uut__DOT__mem_wb_rd))) 
                 & ((IData)(vlSelf->tb_cpu__DOT__uut__DOT__mem_wb_rd) 
                    == (IData)(vlSelf->tb_cpu__DOT__uut__DOT__id_ex_rs2)))) {
         vlSelf->tb_cpu__DOT__uut__DOT__forward_b_sel = 1U;
     }
+    vlSelf->tb_cpu__DOT__ex_mem_forward_a_event = ((IData)(tb_cpu__DOT__id_ex_uses_rs1) 
+                                                   & (2U 
+                                                      == (IData)(vlSelf->tb_cpu__DOT__uut__DOT__forward_a_sel)));
+    vlSelf->tb_cpu__DOT__mem_wb_forward_a_event = ((IData)(tb_cpu__DOT__id_ex_uses_rs1) 
+                                                   & (1U 
+                                                      == (IData)(vlSelf->tb_cpu__DOT__uut__DOT__forward_a_sel)));
     vlSelf->tb_cpu__DOT__uut__DOT__forward_a = ((2U 
                                                  == (IData)(vlSelf->tb_cpu__DOT__uut__DOT__forward_a_sel))
-                                                 ? vlSelf->tb_cpu__DOT__uut__DOT__ex_mem_result
+                                                 ? tb_cpu__DOT__uut__DOT__ex_mem_forward_data
                                                  : 
                                                 ((1U 
                                                   == (IData)(vlSelf->tb_cpu__DOT__uut__DOT__forward_a_sel))
-                                                  ? vlSelf->tb_cpu__DOT__uut__DOT__mem_wb_result
+                                                  ? vlSelf->tb_cpu__DOT__uut__DOT__wb_data
                                                   : vlSelf->tb_cpu__DOT__uut__DOT__id_ex_rd1));
+    vlSelf->tb_cpu__DOT__ex_mem_forward_b_event = ((IData)(tb_cpu__DOT__id_ex_uses_rs2) 
+                                                   & (2U 
+                                                      == (IData)(vlSelf->tb_cpu__DOT__uut__DOT__forward_b_sel)));
+    vlSelf->tb_cpu__DOT__mem_wb_forward_b_event = ((IData)(tb_cpu__DOT__id_ex_uses_rs2) 
+                                                   & (1U 
+                                                      == (IData)(vlSelf->tb_cpu__DOT__uut__DOT__forward_b_sel)));
     vlSelf->tb_cpu__DOT__uut__DOT__forward_b = ((2U 
                                                  == (IData)(vlSelf->tb_cpu__DOT__uut__DOT__forward_b_sel))
-                                                 ? vlSelf->tb_cpu__DOT__uut__DOT__ex_mem_result
+                                                 ? tb_cpu__DOT__uut__DOT__ex_mem_forward_data
                                                  : 
                                                 ((1U 
                                                   == (IData)(vlSelf->tb_cpu__DOT__uut__DOT__forward_b_sel))
-                                                  ? vlSelf->tb_cpu__DOT__uut__DOT__mem_wb_result
+                                                  ? vlSelf->tb_cpu__DOT__uut__DOT__wb_data
                                                   : vlSelf->tb_cpu__DOT__uut__DOT__id_ex_rd2));
-    tb_cpu__DOT__uut__DOT__branch_cond_taken = 0U;
+    vlSelf->tb_cpu__DOT__uut__DOT__branch_cond_taken = 0U;
     if (vlSelf->tb_cpu__DOT__uut__DOT__id_ex_is_branch) {
         if ((0U == (IData)(vlSelf->tb_cpu__DOT__uut__DOT__id_ex_funct3))) {
             if ((vlSelf->tb_cpu__DOT__uut__DOT__forward_a 
                  == vlSelf->tb_cpu__DOT__uut__DOT__forward_b)) {
-                tb_cpu__DOT__uut__DOT__branch_cond_taken = 1U;
+                vlSelf->tb_cpu__DOT__uut__DOT__branch_cond_taken = 1U;
             }
         } else if ((1U == (IData)(vlSelf->tb_cpu__DOT__uut__DOT__id_ex_funct3))) {
             if ((vlSelf->tb_cpu__DOT__uut__DOT__forward_a 
                  != vlSelf->tb_cpu__DOT__uut__DOT__forward_b)) {
-                tb_cpu__DOT__uut__DOT__branch_cond_taken = 1U;
+                vlSelf->tb_cpu__DOT__uut__DOT__branch_cond_taken = 1U;
             }
         } else {
-            tb_cpu__DOT__uut__DOT__branch_cond_taken = 0U;
+            vlSelf->tb_cpu__DOT__uut__DOT__branch_cond_taken = 0U;
         }
     }
     tb_cpu__DOT__uut__DOT____Vcellinp__alu_inst__b 
-        = (((IData)(vlSelf->tb_cpu__DOT__uut__DOT__id_ex_is_itype) 
-            | ((IData)(vlSelf->tb_cpu__DOT__uut__DOT__id_ex_is_load) 
-               | (IData)(vlSelf->tb_cpu__DOT__uut__DOT__id_ex_is_store)))
+        = ((IData)(vlSelf->tb_cpu__DOT__uut__DOT__ex_use_imm)
             ? vlSelf->tb_cpu__DOT__uut__DOT__id_ex_imm
             : vlSelf->tb_cpu__DOT__uut__DOT__forward_b);
     vlSelf->tb_cpu__DOT__uut__DOT__control_taken = 
-        ((IData)(tb_cpu__DOT__uut__DOT__branch_cond_taken) 
+        ((IData)(vlSelf->tb_cpu__DOT__uut__DOT__branch_cond_taken) 
          | (IData)(vlSelf->tb_cpu__DOT__uut__DOT__id_ex_is_jal));
     vlSelf->tb_cpu__DOT__uut__DOT__alu_result = ((8U 
                                                   & (IData)(vlSelf->tb_cpu__DOT__uut__DOT__id_ex_alu_ctrl))
@@ -485,7 +622,10 @@ VL_ATTR_COLD void Vtb_cpu___024root___dump_triggers__act(Vtb_cpu___024root* vlSe
         VL_DBG_MSGF("         'act' region trigger index 0 is active: @(posedge tb_cpu.clk)\n");
     }
     if ((2ULL & vlSelf->__VactTriggered.word(0U))) {
-        VL_DBG_MSGF("         'act' region trigger index 1 is active: @([true] __VdlySched.awaitingCurrentTime())\n");
+        VL_DBG_MSGF("         'act' region trigger index 1 is active: @(negedge tb_cpu.clk)\n");
+    }
+    if ((4ULL & vlSelf->__VactTriggered.word(0U))) {
+        VL_DBG_MSGF("         'act' region trigger index 2 is active: @([true] __VdlySched.awaitingCurrentTime())\n");
     }
 }
 #endif  // VL_DEBUG
@@ -503,7 +643,10 @@ VL_ATTR_COLD void Vtb_cpu___024root___dump_triggers__nba(Vtb_cpu___024root* vlSe
         VL_DBG_MSGF("         'nba' region trigger index 0 is active: @(posedge tb_cpu.clk)\n");
     }
     if ((2ULL & vlSelf->__VnbaTriggered.word(0U))) {
-        VL_DBG_MSGF("         'nba' region trigger index 1 is active: @([true] __VdlySched.awaitingCurrentTime())\n");
+        VL_DBG_MSGF("         'nba' region trigger index 1 is active: @(negedge tb_cpu.clk)\n");
+    }
+    if ((4ULL & vlSelf->__VnbaTriggered.word(0U))) {
+        VL_DBG_MSGF("         'nba' region trigger index 2 is active: @([true] __VdlySched.awaitingCurrentTime())\n");
     }
 }
 #endif  // VL_DEBUG
@@ -513,9 +656,34 @@ VL_ATTR_COLD void Vtb_cpu___024root___ctor_var_reset(Vtb_cpu___024root* vlSelf) 
     Vtb_cpu__Syms* const __restrict vlSymsp VL_ATTR_UNUSED = vlSelf->vlSymsp;
     VL_DEBUG_IF(VL_DBG_MSGF("+    Vtb_cpu___024root___ctor_var_reset\n"); );
     // Body
-    vlSelf->tb_cpu__DOT__cycle = VL_RAND_RESET_I(32);
     vlSelf->tb_cpu__DOT__clk = VL_RAND_RESET_I(1);
     vlSelf->tb_cpu__DOT__reset = VL_RAND_RESET_I(1);
+    vlSelf->tb_cpu__DOT__cycle_count = 0;
+    vlSelf->tb_cpu__DOT__retired_count = 0;
+    vlSelf->tb_cpu__DOT__stall_count = 0;
+    vlSelf->tb_cpu__DOT__control_count = 0;
+    vlSelf->tb_cpu__DOT__load_use_stall_count = 0;
+    vlSelf->tb_cpu__DOT__branch_taken_count = 0;
+    vlSelf->tb_cpu__DOT__jump_taken_count = 0;
+    vlSelf->tb_cpu__DOT__flush_count = 0;
+    vlSelf->tb_cpu__DOT__rtype_count = 0;
+    vlSelf->tb_cpu__DOT__itype_count = 0;
+    vlSelf->tb_cpu__DOT__load_count = 0;
+    vlSelf->tb_cpu__DOT__store_count = 0;
+    vlSelf->tb_cpu__DOT__branch_instr_count = 0;
+    vlSelf->tb_cpu__DOT__jal_instr_count = 0;
+    vlSelf->tb_cpu__DOT__ex_mem_forward_a_count = 0;
+    vlSelf->tb_cpu__DOT__ex_mem_forward_b_count = 0;
+    vlSelf->tb_cpu__DOT__mem_wb_forward_a_count = 0;
+    vlSelf->tb_cpu__DOT__mem_wb_forward_b_count = 0;
+    vlSelf->tb_cpu__DOT__total_forward_count = 0;
+    vlSelf->tb_cpu__DOT__summary_file = 0;
+    vlSelf->tb_cpu__DOT__instruction_file = 0;
+    vlSelf->tb_cpu__DOT__trace_file = 0;
+    vlSelf->tb_cpu__DOT__ex_mem_forward_a_event = VL_RAND_RESET_I(1);
+    vlSelf->tb_cpu__DOT__ex_mem_forward_b_event = VL_RAND_RESET_I(1);
+    vlSelf->tb_cpu__DOT__mem_wb_forward_a_event = VL_RAND_RESET_I(1);
+    vlSelf->tb_cpu__DOT__mem_wb_forward_b_event = VL_RAND_RESET_I(1);
     vlSelf->tb_cpu__DOT__uut__DOT__stall = VL_RAND_RESET_I(1);
     vlSelf->tb_cpu__DOT__uut__DOT__pc = VL_RAND_RESET_I(32);
     vlSelf->tb_cpu__DOT__uut__DOT__instr = VL_RAND_RESET_I(32);
@@ -525,6 +693,7 @@ VL_ATTR_COLD void Vtb_cpu___024root___ctor_var_reset(Vtb_cpu___024root* vlSelf) 
     vlSelf->tb_cpu__DOT__uut__DOT__imm = VL_RAND_RESET_I(32);
     vlSelf->tb_cpu__DOT__uut__DOT__alu_ctrl = VL_RAND_RESET_I(4);
     vlSelf->tb_cpu__DOT__uut__DOT__wb_we = VL_RAND_RESET_I(1);
+    vlSelf->tb_cpu__DOT__uut__DOT__wb_data = VL_RAND_RESET_I(32);
     vlSelf->tb_cpu__DOT__uut__DOT__id_ex_opcode = VL_RAND_RESET_I(7);
     vlSelf->tb_cpu__DOT__uut__DOT__id_ex_rd = VL_RAND_RESET_I(5);
     vlSelf->tb_cpu__DOT__uut__DOT__id_ex_rd1 = VL_RAND_RESET_I(32);
@@ -533,13 +702,14 @@ VL_ATTR_COLD void Vtb_cpu___024root___ctor_var_reset(Vtb_cpu___024root* vlSelf) 
     vlSelf->tb_cpu__DOT__uut__DOT__id_ex_rs1 = VL_RAND_RESET_I(5);
     vlSelf->tb_cpu__DOT__uut__DOT__id_ex_rs2 = VL_RAND_RESET_I(5);
     vlSelf->tb_cpu__DOT__uut__DOT__id_ex_alu_ctrl = VL_RAND_RESET_I(4);
+    vlSelf->tb_cpu__DOT__uut__DOT__id_ex_instr = VL_RAND_RESET_I(32);
     vlSelf->tb_cpu__DOT__uut__DOT__id_ex_is_itype = VL_RAND_RESET_I(1);
     vlSelf->tb_cpu__DOT__uut__DOT__id_ex_is_load = VL_RAND_RESET_I(1);
     vlSelf->tb_cpu__DOT__uut__DOT__id_ex_is_store = VL_RAND_RESET_I(1);
     vlSelf->tb_cpu__DOT__uut__DOT__id_ex_is_branch = VL_RAND_RESET_I(1);
+    vlSelf->tb_cpu__DOT__uut__DOT__id_ex_is_jal = VL_RAND_RESET_I(1);
     vlSelf->tb_cpu__DOT__uut__DOT__id_ex_pc = VL_RAND_RESET_I(32);
     vlSelf->tb_cpu__DOT__uut__DOT__id_ex_funct3 = VL_RAND_RESET_I(3);
-    vlSelf->tb_cpu__DOT__uut__DOT__id_ex_is_jal = VL_RAND_RESET_I(1);
     vlSelf->tb_cpu__DOT__uut__DOT__forward_a = VL_RAND_RESET_I(32);
     vlSelf->tb_cpu__DOT__uut__DOT__forward_b = VL_RAND_RESET_I(32);
     vlSelf->tb_cpu__DOT__uut__DOT__forward_a_sel = VL_RAND_RESET_I(2);
@@ -550,12 +720,18 @@ VL_ATTR_COLD void Vtb_cpu___024root___ctor_var_reset(Vtb_cpu___024root* vlSelf) 
     vlSelf->tb_cpu__DOT__uut__DOT__mem_wb_result = VL_RAND_RESET_I(32);
     vlSelf->tb_cpu__DOT__uut__DOT__mem_wb_rd = VL_RAND_RESET_I(5);
     vlSelf->tb_cpu__DOT__uut__DOT__mem_wb_opcode = VL_RAND_RESET_I(7);
+    vlSelf->tb_cpu__DOT__uut__DOT__mem_wb_pc_plus_4 = VL_RAND_RESET_I(32);
+    vlSelf->tb_cpu__DOT__uut__DOT__mem_wb_is_jal = VL_RAND_RESET_I(1);
     vlSelf->tb_cpu__DOT__uut__DOT__alu_result = VL_RAND_RESET_I(32);
+    vlSelf->tb_cpu__DOT__uut__DOT__ex_use_imm = VL_RAND_RESET_I(1);
+    vlSelf->tb_cpu__DOT__uut__DOT__branch_cond_taken = VL_RAND_RESET_I(1);
+    vlSelf->tb_cpu__DOT__uut__DOT__jal_target = VL_RAND_RESET_I(32);
     vlSelf->tb_cpu__DOT__uut__DOT__ex_mem_store_data = VL_RAND_RESET_I(32);
     vlSelf->tb_cpu__DOT__uut__DOT__ex_mem_pc_plus_4 = VL_RAND_RESET_I(32);
     vlSelf->tb_cpu__DOT__uut__DOT__ex_mem_is_jal = VL_RAND_RESET_I(1);
-    vlSelf->tb_cpu__DOT__uut__DOT__mem_wb_pc_plus_4 = VL_RAND_RESET_I(32);
-    vlSelf->tb_cpu__DOT__uut__DOT__mem_wb_is_jal = VL_RAND_RESET_I(1);
+    vlSelf->tb_cpu__DOT__uut__DOT__ex_mem_instr = VL_RAND_RESET_I(32);
+    vlSelf->tb_cpu__DOT__uut__DOT__mem_read_data = VL_RAND_RESET_I(32);
+    vlSelf->tb_cpu__DOT__uut__DOT__mem_wb_instr = VL_RAND_RESET_I(32);
     for (int __Vi0 = 0; __Vi0 < 256; ++__Vi0) {
         vlSelf->tb_cpu__DOT__uut__DOT__imem_inst__DOT__mem[__Vi0] = VL_RAND_RESET_I(32);
     }
@@ -565,6 +741,10 @@ VL_ATTR_COLD void Vtb_cpu___024root___ctor_var_reset(Vtb_cpu___024root* vlSelf) 
     for (int __Vi0 = 0; __Vi0 < 256; ++__Vi0) {
         vlSelf->tb_cpu__DOT__uut__DOT__dmem__DOT__mem[__Vi0] = VL_RAND_RESET_I(32);
     }
+    vlSelf->__Vfunc_tb_cpu__DOT__instr_uses_rs1__0__Vfuncout = 0;
+    vlSelf->__Vfunc_tb_cpu__DOT__instr_uses_rs1__0__opcode = VL_RAND_RESET_I(7);
+    vlSelf->__Vfunc_tb_cpu__DOT__instr_uses_rs2__1__Vfuncout = 0;
+    vlSelf->__Vfunc_tb_cpu__DOT__instr_uses_rs2__1__opcode = VL_RAND_RESET_I(7);
     vlSelf->__Vdlyvval__tb_cpu__DOT__clk__v0 = VL_RAND_RESET_I(1);
     vlSelf->__Vdlyvset__tb_cpu__DOT__clk__v0 = 0;
     vlSelf->__Vtrigprevexpr___TOP__tb_cpu__DOT__clk__0 = VL_RAND_RESET_I(1);

@@ -24,4 +24,8 @@ Vtb_cpu__Syms::Vtb_cpu__Syms(VerilatedContext* contextp, const char* namep, Vtb_
     // Setup each module's pointers to their submodules
     // Setup each module's pointer back to symbol table (for public functions)
     TOP.__Vconfigure(true);
+    // Setup scopes
+    __Vscope_tb_cpu.configure(this, name(), "tb_cpu", "tb_cpu", -12, VerilatedScope::SCOPE_OTHER);
+    __Vscope_tb_cpu__open_output_files.configure(this, name(), "tb_cpu.open_output_files", "open_output_files", -12, VerilatedScope::SCOPE_OTHER);
+    __Vscope_tb_cpu__update_counters.configure(this, name(), "tb_cpu.update_counters", "update_counters", -12, VerilatedScope::SCOPE_OTHER);
 }
