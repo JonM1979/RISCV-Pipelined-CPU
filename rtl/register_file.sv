@@ -15,7 +15,7 @@ assign rd2 = regs[rs2];
 
 // Write port (sequential)
 always_ff @( posedge clk ) begin
-    if(we && rd != 0) begin // Write to register if enabled and not x0
+    if(we && rd != 5'd0) begin // Write to register if enabled and not x0
         regs[rd] <= wd;
     end
 end

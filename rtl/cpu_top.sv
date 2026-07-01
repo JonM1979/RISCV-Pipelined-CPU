@@ -140,19 +140,18 @@ logic [31:0] id_ex_rd1, id_ex_rd2;
 logic [31:0] id_ex_imm;
 logic [4:0] id_ex_rs1, id_ex_rs2;
 logic [3:0] id_ex_alu_ctrl;
+logic [31:0] id_ex_instr;
 
 // carrying instruction class info into EX
 logic id_ex_is_itype;
 logic id_ex_is_load;
 logic id_ex_is_store;
 logic id_ex_is_branch;
+logic id_ex_is_jal;
 
 // Branch Logic 
 logic [31:0] id_ex_pc;
 logic [2:0] id_ex_funct3;
-
-// Jump Signal
-logic id_ex_is_jal;
 
 always_ff @( posedge clk )
 begin
@@ -173,6 +172,7 @@ begin
         id_ex_is_store <= 0;
         id_ex_is_load <= 0;
         id_ex_is_branch <= 0;
+        id_ex_instr <= 0;
     end
     else if (control_taken) begin
         // INSERT NOP
@@ -191,6 +191,7 @@ begin
         id_ex_is_store <= 0;
         id_ex_is_load <= 0;
         id_ex_is_branch <= 0;
+        id_ex_instr <= 0;
     end
     else if (stall) begin
         
@@ -209,11 +210,13 @@ begin
         id_ex_is_store <= 0;
         id_ex_is_load <= 0;
         id_ex_is_branch <= 0;
+        id_ex_instr <= 0;
     end
     else begin
     
-        id_ex_rd1 <= rd1;
-        id_ex_rd2 <= rd2;
+        id_ex_rd1 <= (wb_we && (wb_rd != 0) && (wb_rd == rs1)) ? wb_data : rd1;
+        id_ex_rd2 <= (wb_we && (wb_rd != 0) && (wb_rd == rs2)) ? wb_data : rd2;
+        id_ex_instr <= if_id_instr;
 
         id_ex_imm <= imm;
 
@@ -250,29 +253,54 @@ logic [1:0] forward_a_sel, forward_b_sel;
 logic [31:0] ex_mem_result;
 logic [4:0]  ex_mem_rd;
 logic [6:0]  ex_mem_opcode;
+logic [31:0] ex_mem_forward_data;
+logic ex_mem_regwrite;
 
 // MEM/WB Stage delcarations needed by forwaring
 logic [31:0] mem_wb_result;
 logic [4:0]  mem_wb_rd;
 logic [6:0]  mem_wb_opcode;
+logic [31:0] mem_wb_pc_plus_4;
+logic mem_wb_is_jal;
+logic [31:0] mem_wb_forward_data;
+logic mem_wb_regwrite;
 
+assign ex_mem_forward_data = ex_mem_is_jal ? ex_mem_pc_plus_4 : ex_mem_result;
+assign mem_wb_forward_data = mem_wb_is_jal ? mem_wb_pc_plus_4 : mem_wb_result;
+
+assign ex_mem_regwrite = 
+    (ex_mem_opcode == OPCODE_R_TYPE) ||
+    (ex_mem_opcode == OPCODE_I_TYPE) ||
+    (ex_mem_opcode == OPCODE_JAL);
+// LOAD is excluded because load data is not valid yet in EX/MEM
+
+assign mem_wb_regwrite =
+    (mem_wb_opcode == OPCODE_R_TYPE) ||
+    (mem_wb_opcode == OPCODE_I_TYPE) ||
+    (mem_wb_opcode == OPCODE_LOAD)   ||
+    (mem_wb_opcode == OPCODE_JAL);
+
+// Forwarding priority:
+// EX/MEM first for ALU ops
+// MEM/WB second
+// never forwards loads from EX/MEM because loaded data is not ready there 
 always_comb begin
     forward_a_sel = 2'b00;
     forward_b_sel = 2'b00;
 
     // A
-    if ((ex_mem_rd != 0) && (ex_mem_rd == id_ex_rs1) && (ex_mem_opcode != OPCODE_LOAD)) begin
+    if (ex_mem_regwrite && (ex_mem_rd != 0) && (ex_mem_rd == id_ex_rs1)) begin
         forward_a_sel = 2'b10;
     end
-    else if ((mem_wb_rd != 0) && (mem_wb_rd == id_ex_rs1)) begin
+    else if (mem_wb_regwrite && (mem_wb_rd != 0) && (mem_wb_rd == id_ex_rs1)) begin
         forward_a_sel = 2'b01;
     end
 
     // B
-    if ((ex_mem_rd != 0) && (ex_mem_rd == id_ex_rs2) && (ex_mem_opcode != OPCODE_LOAD)) begin
+    if (ex_mem_regwrite && (ex_mem_rd != 0) && (ex_mem_rd == id_ex_rs2)) begin
         forward_b_sel = 2'b10;
     end
-    else if ((mem_wb_rd != 0) && (mem_wb_rd == id_ex_rs2)) begin
+    else if (mem_wb_regwrite && (mem_wb_rd != 0) && (mem_wb_rd == id_ex_rs2)) begin
         forward_b_sel = 2'b01;
     end
 end
@@ -286,14 +314,14 @@ always_comb begin
     forward_b = id_ex_rd2;
 
     case (forward_a_sel)
-        2'b10: forward_a = ex_mem_result;
-        2'b01: forward_a = mem_wb_result;
+        2'b10: forward_a = ex_mem_forward_data;
+        2'b01: forward_a = mem_wb_forward_data;
         default: forward_a = id_ex_rd1;
     endcase
 
     case (forward_b_sel)
-        2'b10: forward_b = ex_mem_result;
-        2'b01: forward_b = mem_wb_result;
+        2'b10: forward_b = ex_mem_forward_data;
+        2'b01: forward_b = mem_wb_forward_data;
         default: forward_b = id_ex_rd2;
     endcase
 
@@ -359,6 +387,7 @@ alu alu_inst(
 logic [31:0] ex_mem_store_data; // For store instructions, we need to pass the value to be stored
 logic [31:0] ex_mem_pc_plus_4;
 logic ex_mem_is_jal;
+logic [31:0] ex_mem_instr;
 
 always_ff @( posedge clk )
 begin
@@ -370,6 +399,7 @@ begin
         ex_mem_store_data <= 0;
         ex_mem_pc_plus_4 <= 0;
         ex_mem_is_jal <= 0;
+        ex_mem_instr <= 0;
     end else 
     begin
         ex_mem_result <= alu_result; // Pass ALU result to MEM stage
@@ -378,6 +408,7 @@ begin
         ex_mem_store_data <= forward_b; // Pass the value to be stored for store instructions
         ex_mem_pc_plus_4 <= ex_pc_plus_4;
         ex_mem_is_jal <= id_ex_is_jal;
+        ex_mem_instr <= id_ex_instr;
     end
 end
 
@@ -389,6 +420,7 @@ logic mem_we; // Memory write enable
 logic mem_re; // Memory read enable
 logic is_mem_load, is_mem_store;
 logic [31:0] mem_read_data; // Data read from memory
+logic [31:0] mem_wb_instr;
 
 assign is_mem_load = (ex_mem_opcode == OPCODE_LOAD); // Load opcode
 assign is_mem_store = (ex_mem_opcode == OPCODE_STORE); // Store opcode
@@ -410,9 +442,6 @@ data_memory dmem(
 // MEM/WB Pipeline Registers
 ///////////////////////////////////////////
 
-logic [31:0] mem_wb_pc_plus_4;
-logic mem_wb_is_jal;
-
 always_ff @( posedge clk )
 begin
     if(reset) 
@@ -422,6 +451,7 @@ begin
         mem_wb_opcode <= 0;
         mem_wb_pc_plus_4 <= 0;
         mem_wb_is_jal <= 0;
+        mem_wb_instr <= 0;
     end else 
     begin
         if(is_mem_load)
@@ -433,6 +463,7 @@ begin
         mem_wb_opcode <= ex_mem_opcode; // Pass opcode to WB stage
         mem_wb_pc_plus_4 <= ex_mem_pc_plus_4;
         mem_wb_is_jal <= ex_mem_is_jal;
+        mem_wb_instr <= ex_mem_instr;
     end
 end
 
@@ -452,6 +483,6 @@ assign wb_we =
 assign wb_rd = mem_wb_rd; // Write back to the destination register
 
 // Data to write back
-assign wb_data = mem_wb_is_jal ? mem_wb_pc_plus_4 : mem_wb_result;
+assign wb_data = mem_wb_forward_data;
 
 endmodule
