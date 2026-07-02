@@ -23,9 +23,10 @@ begin
     );
 
     $fdisplay(trace_file,
-        "BRANCH_TAKEN=%0b | JUMP_TAKEN=%0b | HALT_IN_WB=%0b",
+        "BRANCH_TAKEN=%0b | JAL_TAKEN=%0b | JALR_TAKEN=%0b | HALT_IN_WB=%0b",
         uut.branch_cond_taken,
         uut.jal_taken,
+        uut.jalr_taken,
         (uut.mem_wb_instr == HALT_INSTR)
     );
 
@@ -85,10 +86,17 @@ begin
         uut.rs1
     );
 
-    $fdisplay(trace_file,
-        "  Source Reg 2      : x%0d",
-        uut.rs2
-    );
+    if (uut.uses_rs2) begin
+        $fdisplay(trace_file,
+            "  Source Reg 2      : x%0d",
+            uut.rs2
+        );
+    end
+    else begin
+        $fdisplay(trace_file,
+            "  Source Reg 2      : unused"
+        );
+    end
 
     $fdisplay(trace_file,
         "  Destination Reg   : x%0d",
@@ -101,13 +109,15 @@ begin
     );
 
     $fdisplay(trace_file,
-        "  Type Flags        : R=%0b I=%0b LOAD=%0b STORE=%0b BRANCH=%0b JAL=%0b",
+        "  Type Flags        : R=%0b I=%0b LOAD=%0b STORE=%0b BRANCH=%0b JAL=%0b JALR=%0b LUI=%0b",
         uut.is_rtype,
         uut.is_itype,
         uut.is_load,
         uut.is_store,
         uut.is_branch,
-        uut.is_jal
+        uut.is_jal,
+        uut.is_jalr,
+        uut.is_lui
     );
 
     $fdisplay(trace_file,
@@ -140,20 +150,34 @@ begin
         uut.id_ex_rs1
     );
 
-    $fdisplay(trace_file,
-        "  Source Reg 2      : x%0d",
-        uut.id_ex_rs2
-    );
+    if (uut.id_ex_uses_rs2) begin
+        $fdisplay(trace_file,
+            "  Source Reg 2      : x%0d",
+            uut.id_ex_rs2
+        );
+    end
+    else begin
+        $fdisplay(trace_file,
+            "  Source Reg 2      : unused"
+        );
+    end
 
     $fdisplay(trace_file,
         "  Raw Reg Data 1    : %0d",
         uut.id_ex_rd1
     );
 
-    $fdisplay(trace_file,
-        "  Raw Reg Data 2    : %0d",
-        uut.id_ex_rd2
-    );
+    if (uut.id_ex_uses_rs2) begin
+        $fdisplay(trace_file,
+            "  Raw Reg Data 2    : %0d",
+            uut.id_ex_rd2
+        );
+    end
+    else begin
+        $fdisplay(trace_file,
+            "  Raw Reg Data 2    : unused"
+        );
+    end
 
     $fdisplay(trace_file,
         "  Immediate Value   : %0d",
@@ -165,10 +189,17 @@ begin
         uut.forward_a
     );
 
-    $fdisplay(trace_file,
-        "  Forwarded B       : %0d",
-        uut.forward_b
-    );
+    if (uut.id_ex_uses_rs2) begin
+        $fdisplay(trace_file,
+            "  Forwarded B       : %0d",
+            uut.forward_b
+        );
+    end
+    else begin
+        $fdisplay(trace_file,
+            "  Forwarded B       : unused"
+        );
+    end
 
     $fdisplay(trace_file,
         "  Forward Select A  : %b (%s)",
@@ -176,11 +207,18 @@ begin
         fwd_sel_name(uut.forward_a_sel)
     );
 
-    $fdisplay(trace_file,
-        "  Forward Select B  : %b (%s)",
-        uut.forward_b_sel,
-        fwd_sel_name(uut.forward_b_sel)
-    );
+    if (uut.id_ex_uses_rs2) begin
+        $fdisplay(trace_file,
+            "  Forward Select B  : %b (%s)",
+            uut.forward_b_sel,
+            fwd_sel_name(uut.forward_b_sel)
+        );
+    end
+    else begin
+        $fdisplay(trace_file,
+            "  Forward Select B  : unused"
+        );
+    end
 
     $fdisplay(trace_file,
         "  Uses Immediate    : %0b",
@@ -226,8 +264,13 @@ begin
         );
 
         $fdisplay(trace_file,
-            "  Jump Taken        : %0b",
+            "  JAL Taken         : %0b",
             uut.jal_taken
+        );
+
+        $fdisplay(trace_file,
+            "  JALR Taken        : %0b",
+            uut.jalr_taken
         );
 
         $fdisplay(trace_file,
@@ -319,12 +362,12 @@ begin
     );
 
     $fdisplay(trace_file,
-        "  Is JAL Writeback  : %0b",
-        uut.mem_wb_is_jal
+        "  Is Link Writeback  : %0b",
+        uut.mem_wb_is_link
     );
 
     $fdisplay(trace_file,
-        "  JAL PC + 4        : %08h",
+        "  Link PC + 4        : %08h",
         uut.mem_wb_pc_plus_4
     );
 

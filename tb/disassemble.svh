@@ -41,6 +41,23 @@ function automatic string disasm(input logic [31:0] instr);
                 FUNCT3_ADD_SUB:
                     return $sformatf("ADDI x%0d, x%0d, %0d", rd, rs1, imm_i);
 
+                FUNCT3_SLT:     
+                    return $sformatf("SLTI x%0d, x%0d, %0d", rd, rs1, imm_i);
+
+                FUNCT3_XOR:     
+                    return $sformatf("XORI x%0d, x%0d, %0d", rd, rs1, imm_i);
+                FUNCT3_OR:      
+                    return $sformatf("ORI x%0d, x%0d, %0d", rd, rs1, imm_i);
+
+                FUNCT3_AND:     
+                    return $sformatf("ANDI x%0d, x%0d, %0d", rd, rs1, imm_i);
+
+                FUNCT3_SLL:     
+                    return $sformatf("SLLI x%0d, x%0d, %0d", rd, rs1, instr[24:20]);
+
+                FUNCT3_SR:      
+                    return $sformatf("SRLI x%0d, x%0d, %0d", rd, rs1, instr[24:20]);
+
                 default:
                     return $sformatf("I-TYPE? instr=%08h", instr);
             endcase
@@ -127,6 +144,12 @@ function automatic string disasm(input logic [31:0] instr);
 
         OPCODE_JAL:
             return $sformatf("JAL x%0d, %0d", rd, imm_j);
+
+        OPCODE_JALR:
+            return $sformatf("JALR x%0d, %0d(x%0d)", rd, imm_i, rs1);
+
+        OPCODE_LUI:
+            return $sformatf("LUI x%0d, 0x%05h", rd, instr[31:12]);
 
         default:
             return $sformatf("UNKNOWN instr=%08h", instr);

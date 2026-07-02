@@ -72,8 +72,8 @@ logic [31:0] imm;
 logic [3:0] alu_ctrl;
 
 // decode outputs
-logic is_load, is_store, is_branch, is_rtype, is_itype, is_jal;
-
+logic is_load, is_store, is_branch, is_rtype, 
+    is_itype, is_jal, is_jalr, is_lui, uses_rs1, uses_rs2;
 
 decode dec(
     .instr(if_id_instr),
@@ -93,6 +93,10 @@ decode dec(
     .is_rtype(is_rtype),
     .is_itype(is_itype),
     .is_jal(is_jal),
+    .is_jalr(is_jalr),
+    .is_lui(is_lui),
+    .uses_rs1(uses_rs1),
+    .uses_rs2(uses_rs2),
 
 
     .alu_ctrl(alu_ctrl)
@@ -129,8 +133,8 @@ assign stall =
     (
         (id_ex_rd != 0) &&
         (
-            (id_ex_rd == rs1) || // Load destination matches current instruction's rs1
-            (id_ex_rd == rs2)    // Load destination matches current instruction's rs2
+            (uses_rs1 && (id_ex_rd == rs1)) || // Load destination matches current instruction's rs1
+            (uses_rs2 && (id_ex_rd == rs2))    // Load destination matches current instruction's rs2
         )
     );
 ///////////////////////////////////////////
@@ -148,6 +152,10 @@ logic id_ex_is_load;
 logic id_ex_is_store;
 logic id_ex_is_branch;
 logic id_ex_is_jal;
+logic id_ex_is_jalr;
+logic id_ex_is_lui;
+logic id_ex_uses_rs1;
+logic id_ex_uses_rs2;
 
 // Branch Logic 
 logic [31:0] id_ex_pc;
@@ -173,6 +181,10 @@ begin
         id_ex_is_load <= 0;
         id_ex_is_branch <= 0;
         id_ex_instr <= 0;
+        id_ex_is_jalr <= 0;
+        id_ex_is_lui <= 0;
+        id_ex_uses_rs1 <= 0;
+        id_ex_uses_rs2 <= 0;
     end
     else if (control_taken) begin
         // INSERT NOP
@@ -192,6 +204,10 @@ begin
         id_ex_is_load <= 0;
         id_ex_is_branch <= 0;
         id_ex_instr <= 0;
+        id_ex_is_jalr <= 0;
+        id_ex_is_lui <= 0;
+        id_ex_uses_rs1 <= 0;
+        id_ex_uses_rs2 <= 0;
     end
     else if (stall) begin
         
@@ -211,6 +227,10 @@ begin
         id_ex_is_load <= 0;
         id_ex_is_branch <= 0;
         id_ex_instr <= 0;
+        id_ex_is_jalr <= 0;
+        id_ex_is_lui <= 0;
+        id_ex_uses_rs1 <= 0;
+        id_ex_uses_rs2 <= 0;
     end
     else begin
     
@@ -239,6 +259,10 @@ begin
 
         // Jump
         id_ex_is_jal <= is_jal;
+        id_ex_is_jalr <= is_jalr;
+        id_ex_is_lui <= is_lui;
+        id_ex_uses_rs1 <= uses_rs1;
+        id_ex_uses_rs2 <= uses_rs2;
     end
 end
 
@@ -261,24 +285,30 @@ logic [31:0] mem_wb_result;
 logic [4:0]  mem_wb_rd;
 logic [6:0]  mem_wb_opcode;
 logic [31:0] mem_wb_pc_plus_4;
-logic mem_wb_is_jal;
+logic mem_wb_is_link;
 logic [31:0] mem_wb_forward_data;
 logic mem_wb_regwrite;
 
-assign ex_mem_forward_data = ex_mem_is_jal ? ex_mem_pc_plus_4 : ex_mem_result;
-assign mem_wb_forward_data = mem_wb_is_jal ? mem_wb_pc_plus_4 : mem_wb_result;
+assign ex_mem_forward_data = ex_mem_is_link ? ex_mem_pc_plus_4 : ex_mem_result;
+assign mem_wb_forward_data = mem_wb_is_link ? mem_wb_pc_plus_4 : mem_wb_result;
+
 
 assign ex_mem_regwrite = 
     (ex_mem_opcode == OPCODE_R_TYPE) ||
     (ex_mem_opcode == OPCODE_I_TYPE) ||
-    (ex_mem_opcode == OPCODE_JAL);
+    (ex_mem_opcode == OPCODE_JAL)    ||
+    (ex_mem_opcode == OPCODE_JALR)   ||
+    (ex_mem_opcode == OPCODE_LUI);
 // LOAD is excluded because load data is not valid yet in EX/MEM
+
 
 assign mem_wb_regwrite =
     (mem_wb_opcode == OPCODE_R_TYPE) ||
     (mem_wb_opcode == OPCODE_I_TYPE) ||
     (mem_wb_opcode == OPCODE_LOAD)   ||
-    (mem_wb_opcode == OPCODE_JAL);
+    (mem_wb_opcode == OPCODE_JAL)    ||
+    (mem_wb_opcode == OPCODE_JALR)   ||
+    (mem_wb_opcode == OPCODE_LUI);
 
 // Forwarding priority:
 // EX/MEM first for ALU ops
@@ -288,20 +318,36 @@ always_comb begin
     forward_a_sel = 2'b00;
     forward_b_sel = 2'b00;
 
-    // A
-    if (ex_mem_regwrite && (ex_mem_rd != 0) && (ex_mem_rd == id_ex_rs1)) begin
-        forward_a_sel = 2'b10;
-    end
-    else if (mem_wb_regwrite && (mem_wb_rd != 0) && (mem_wb_rd == id_ex_rs1)) begin
-        forward_a_sel = 2'b01;
+    // Operand A forwarding
+    if (id_ex_uses_rs1) begin
+        if (ex_mem_regwrite &&
+            (ex_mem_rd != 5'd0) &&
+            (ex_mem_rd == id_ex_rs1)) begin
+
+            forward_a_sel = 2'b10;
+        end
+        else if (mem_wb_regwrite &&
+                 (mem_wb_rd != 5'd0) &&
+                 (mem_wb_rd == id_ex_rs1)) begin
+
+            forward_a_sel = 2'b01;
+        end
     end
 
-    // B
-    if (ex_mem_regwrite && (ex_mem_rd != 0) && (ex_mem_rd == id_ex_rs2)) begin
-        forward_b_sel = 2'b10;
-    end
-    else if (mem_wb_regwrite && (mem_wb_rd != 0) && (mem_wb_rd == id_ex_rs2)) begin
-        forward_b_sel = 2'b01;
+    // Operand B forwarding
+    if (id_ex_uses_rs2) begin
+        if (ex_mem_regwrite &&
+            (ex_mem_rd != 5'd0) &&
+            (ex_mem_rd == id_ex_rs2)) begin
+
+            forward_b_sel = 2'b10;
+        end
+        else if (mem_wb_regwrite &&
+                 (mem_wb_rd != 5'd0) &&
+                 (mem_wb_rd == id_ex_rs2)) begin
+
+            forward_b_sel = 2'b01;
+        end
     end
 end
 
@@ -336,18 +382,22 @@ logic [31:0] alu_result;
 
 // operand B selection uses immediate for I-Type / load / store
 logic ex_use_imm;
-assign ex_use_imm = id_ex_is_itype || id_ex_is_load || id_ex_is_store;
+assign ex_use_imm = id_ex_is_itype || id_ex_is_load || id_ex_is_store || id_ex_is_jalr || id_ex_is_lui;
 
 // branch / jump control
-logic branch_cond_taken, jal_taken;
-logic [31:0] branch_target, jal_target, ex_pc_plus_4;
+logic branch_cond_taken, jal_taken, jalr_taken;
+logic [31:0] branch_target, jal_target, ex_pc_plus_4, jalr_target;
 
 
 assign ex_pc_plus_4 = id_ex_pc + 32'd4;
+
 assign branch_target = id_ex_pc + id_ex_imm;
 assign jal_target = id_ex_pc + id_ex_imm;
-assign jal_taken = id_ex_is_jal;
 
+assign jal_taken = id_ex_is_jal;
+assign jalr_taken = id_ex_is_jalr;
+
+assign jalr_target = (forward_a + id_ex_imm) & ~32'd1; // Clear LSB for JALR
 
 // Branch Logic
 always_comb begin
@@ -356,21 +406,35 @@ always_comb begin
     if(id_ex_is_branch) begin
         case(id_ex_funct3)
             FUNCT3_BEQ:
-                if(forward_a == forward_b)
-                    branch_cond_taken = 1'b1;
-            
+                branch_cond_taken = (forward_a == forward_b);
+
             FUNCT3_BNE:
-                if(forward_a != forward_b)
-                    branch_cond_taken = 1'b1;
-            
+                branch_cond_taken = (forward_a != forward_b);
+                    
+            FUNCT3_BGE:
+                branch_cond_taken = ($signed(forward_a) >= $signed(forward_b));
+
+            FUNCT3_BLT:
+                branch_cond_taken = ($signed(forward_a) < $signed(forward_b));
+
             default:
                 branch_cond_taken = 1'b0;
         endcase
     end
 end
 
-assign control_taken = branch_cond_taken || jal_taken;
-assign control_target = branch_cond_taken ? branch_target : jal_target;
+assign control_taken = branch_cond_taken || jal_taken || jalr_taken;
+
+always_comb begin
+    if(branch_cond_taken)
+        control_target = branch_target;
+    else if (jal_taken)
+        control_target = jal_target;
+    else if (jalr_taken)
+        control_target = jalr_target;
+    else
+        control_target = 32'd0; // Default value
+end
 
 // ALU
 alu alu_inst(
@@ -386,8 +450,8 @@ alu alu_inst(
 
 logic [31:0] ex_mem_store_data; // For store instructions, we need to pass the value to be stored
 logic [31:0] ex_mem_pc_plus_4;
-logic ex_mem_is_jal;
 logic [31:0] ex_mem_instr;
+logic ex_mem_is_link;
 
 always_ff @( posedge clk )
 begin
@@ -398,8 +462,8 @@ begin
         ex_mem_opcode <= 0;
         ex_mem_store_data <= 0;
         ex_mem_pc_plus_4 <= 0;
-        ex_mem_is_jal <= 0;
         ex_mem_instr <= 0;
+        ex_mem_is_link <= 0;
     end else 
     begin
         ex_mem_result <= alu_result; // Pass ALU result to MEM stage
@@ -407,8 +471,8 @@ begin
         ex_mem_opcode <= id_ex_opcode; // Pass opcode to MEM stage
         ex_mem_store_data <= forward_b; // Pass the value to be stored for store instructions
         ex_mem_pc_plus_4 <= ex_pc_plus_4;
-        ex_mem_is_jal <= id_ex_is_jal;
         ex_mem_instr <= id_ex_instr;
+        ex_mem_is_link <= id_ex_is_jal || id_ex_is_jalr;
     end
 end
 
@@ -441,7 +505,6 @@ data_memory dmem(
 ///////////////////////////////////////////
 // MEM/WB Pipeline Registers
 ///////////////////////////////////////////
-
 always_ff @( posedge clk )
 begin
     if(reset) 
@@ -450,8 +513,8 @@ begin
         mem_wb_rd <= 0;
         mem_wb_opcode <= 0;
         mem_wb_pc_plus_4 <= 0;
-        mem_wb_is_jal <= 0;
         mem_wb_instr <= 0;
+        mem_wb_is_link <= 0;
     end else 
     begin
         if(is_mem_load)
@@ -462,8 +525,8 @@ begin
         mem_wb_rd <= ex_mem_rd; // Pass destination register index to WB stage
         mem_wb_opcode <= ex_mem_opcode; // Pass opcode to WB stage
         mem_wb_pc_plus_4 <= ex_mem_pc_plus_4;
-        mem_wb_is_jal <= ex_mem_is_jal;
         mem_wb_instr <= ex_mem_instr;
+        mem_wb_is_link <= ex_mem_is_link;
     end
 end
 
@@ -473,10 +536,12 @@ end
 
 // Enable writeback for ADD/ADDI instructions
 assign wb_we = 
-    (mem_wb_opcode == OPCODE_R_TYPE) || // ADDI
-    (mem_wb_opcode == OPCODE_I_TYPE) || // ADD
-    (mem_wb_opcode == OPCODE_LOAD) ||   // Load
-    (mem_wb_opcode == OPCODE_JAL);
+    (mem_wb_opcode == OPCODE_R_TYPE)    || // ADDI
+    (mem_wb_opcode == OPCODE_I_TYPE)    || // ADD
+    (mem_wb_opcode == OPCODE_LOAD)      || // Load
+    (mem_wb_opcode == OPCODE_JAL)       || // JAL
+    (mem_wb_opcode == OPCODE_JALR)      || // JALR
+    (mem_wb_opcode == OPCODE_LUI);        // LUI
 
 
 // Destination Register
