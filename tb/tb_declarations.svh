@@ -14,8 +14,9 @@ int unsigned control_count;
 // Hazard/Control counters
 int unsigned load_use_stall_count;
 int unsigned branch_taken_count;
-int unsigned jump_taken_count;
 int unsigned flush_count;
+int unsigned jal_taken_count;
+int unsigned jalr_taken_count;
 
 // Instruction mix counters
 int unsigned rtype_count;
@@ -24,6 +25,8 @@ int unsigned load_count;
 int unsigned store_count;
 int unsigned branch_instr_count;
 int unsigned jal_instr_count;
+int unsigned jalr_instr_count;
+int unsigned lui_instr_count;
 
 // Forwarding counters
 int unsigned ex_mem_forward_a_count;

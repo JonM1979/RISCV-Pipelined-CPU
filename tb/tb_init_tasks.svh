@@ -37,8 +37,9 @@ begin
 
     load_use_stall_count = 0;
     branch_taken_count   = 0;
-    jump_taken_count     = 0;
     flush_count          = 0;
+    jal_taken_count      = 0;
+    jalr_taken_count     = 0;
 
     rtype_count        = 0;
     itype_count        = 0;
@@ -46,6 +47,8 @@ begin
     store_count        = 0;
     branch_instr_count = 0;
     jal_instr_count    = 0;
+    jalr_instr_count   = 0;
+    lui_instr_count     = 0;
 
     ex_mem_forward_a_count = 0;
     ex_mem_forward_b_count = 0;

@@ -37,6 +37,14 @@ begin
                 jal_instr_count <= jal_instr_count + 1;
             end
 
+            OPCODE_JALR: begin
+                jalr_instr_count <= jalr_instr_count + 1;
+            end
+
+            OPCODE_LUI: begin
+                lui_instr_count <= lui_instr_count + 1;
+            end
+
             default: begin
                 // Do nothing
             end
@@ -61,7 +69,11 @@ begin
     end
 
     if (uut.jal_taken) begin
-        jump_taken_count <= jump_taken_count + 1;
+        jal_taken_count <= jal_taken_count + 1;
+    end
+
+    if (uut.jalr_taken) begin
+        jalr_taken_count <= jalr_taken_count + 1;
     end
 
     // Forwarding counters
