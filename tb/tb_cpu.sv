@@ -21,6 +21,9 @@ cpu_top uut (
 `include "data_trace.svh"
 `include "tb_init_tasks.svh"
 `include "tb_counter_update.svh"
+`include "check_full_instruction_test.svh"
+`include "check_all_hazards_test.svh"
+`include "check_dispatch.svh"
 
 // CLOCK GENERATOR
 always #5 clk <= ~clk;
@@ -29,6 +32,14 @@ always #5 clk <= ~clk;
 initial begin
 
     open_output_files();
+
+    if(!$value$plusargs("TEST=%s", test_name)) begin
+        test_name = "none";
+    end
+
+    $display("Running test: %s", test_name);
+
+
     initialize_counters();
 
     clk = 0;
@@ -66,6 +77,7 @@ always @(negedge clk) begin
             $fdisplay(trace_file, "\nHALT reached WB stage. Ending simulation.");
 
             final_summary();
+            run_selected_check();
             close_output_files();
 
             $finish;

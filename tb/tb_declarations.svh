@@ -4,6 +4,8 @@ logic clk;
 logic reset;
 
 // -------------DATA SIGNALS FOR CPU PERFORMANCE-----------------
+// Test variables
+string test_name;
 
 // Basic performance counters
 int unsigned cycle_count;

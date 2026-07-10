@@ -235,7 +235,6 @@ logic [6:0] mem_wb_opcode;
 // True when WB should write PC+4 beacuase instructions was JAL/JALR
 logic mem_wb_is_link;
 
-
 ///////////////////////////////////////////
 // WB Stage Signals 
 ///////////////////////////////////////////

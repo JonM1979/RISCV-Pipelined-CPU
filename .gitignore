@@ -4,12 +4,10 @@ sim/obj_dir/
 
 #Simulation logs
 *.log
-sim_output.txt
 sim/sim_output.txt
 
 #Generated assembled program
-program.hex
-sim/program.hex
+sim/*.hex
 
 # Waveform files, when generated
 *.vcd
