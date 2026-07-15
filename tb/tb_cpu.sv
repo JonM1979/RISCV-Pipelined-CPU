@@ -24,7 +24,7 @@ cpu_top uut (
 `include "check_full_instruction_test.svh"
 `include "check_all_hazards_test.svh"
 `include "check_dispatch.svh"
-
+`include "self_check_test.svh"
 // CLOCK GENERATOR
 always #5 clk <= ~clk;
 

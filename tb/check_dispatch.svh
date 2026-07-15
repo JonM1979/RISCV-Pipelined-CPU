@@ -8,7 +8,10 @@ begin
         check_hazard_all_test();
     end
     else begin
-        $display("WARNING: No automatic check registered for test '%s'", test_name);
+        $display("INFO: No dedicated checker registered for '%s'", test_name);
+        $display("INFO: Using generic self-check convention: x31 must equal 1");
+
+        check_self_check_test();
 
         $fdisplay(summary_file, "\n[TEST RESULT]");
         $fdisplay(summary_file, "Test Name                : %s", test_name);

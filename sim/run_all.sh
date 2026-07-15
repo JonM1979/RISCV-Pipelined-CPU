@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+shopt -s nullglob
+
 # ============================================================
 # run_all.sh
 #
@@ -36,9 +38,13 @@ set -euo pipefail
 # ============================================================
 
 TESTS=(
-    "../programs/full_instruction_test.s"
-    "../programs/all_hazards_test.s"
+    ../programs/*_test.s
 )
+
+if [ ${TESTS[@]} -eq 0 ]; then
+    echo "FAIL: No test programs found matching ../programs/*_test.s"
+    exit 1
+fi
 
 REGRESSION_LOG="regression.log"
 COMBINED_SUMMARY="summary_all.log"
