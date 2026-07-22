@@ -60,7 +60,13 @@
     localparam logic [3:0] ALU_SRL      = 4'd5;
     localparam logic [3:0] ALU_OR       = 4'd6;
     localparam logic [3:0] ALU_AND      = 4'd7;
-    localparam logic [3:0] ALU_COPY_B   = 4'd8; // For LUI instruction, the ALU will just pass the immediate value to the output
+
+    // For LUI instruction, the ALU will just pass the immediate value to the output
+    localparam logic [3:0] ALU_COPY_B   = 4'd8; 
+
+    // Used when an instruction does not need the ALU result
+    // ex: branches use branch_control.sv for comparison/redirect
+    localparam logic [3:0] ALU_NOP      = 4'd15;
 ////////////////////////////////
 
 `endif

@@ -41,5 +41,4 @@ cd sim
 | Test Program | Purpose |
 |--------------|---------|
 | full_instruction_test.s | Verifies all supported instructions |
-| all_hazards_test.s | Verifies forwarding, load-use stalls, store-data forwarding
-branch flushed, JAL/JALR flushes, and x0 protection | 
+| all_hazards_test.s | Verifies forwarding, load-use stalls, store-data forwarding branch flushed, JAL/JALR flushes, and x0 protection | 

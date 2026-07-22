@@ -22,7 +22,9 @@ always_comb begin
         ALU_OR:     result = a | b;
         ALU_AND:    result = a & b;
 
-        ALU_COPY_B: result = b; 
+        ALU_COPY_B: result = b;
+
+        ALU_NOP: result = 32'd0; 
 
         default:    result = 32'd0;
     endcase

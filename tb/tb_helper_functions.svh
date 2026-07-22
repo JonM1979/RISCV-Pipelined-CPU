@@ -17,7 +17,8 @@ function automatic bit instr_uses_rs1(input logic [6:0] opcode);
         OPCODE_I_TYPE,
         OPCODE_LOAD,
         OPCODE_STORE,
-        OPCODE_BRANCH: return 1'b1;
+        OPCODE_BRANCH,
+        OPCODE_JALR: return 1'b1;
 
         default: return 1'b0;
     endcase

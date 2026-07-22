@@ -216,7 +216,11 @@ always_comb begin
     end
 
     else if (is_branch) begin
-        alu_ctrl = ALU_SUB; // address calc + ADDI
+        alu_ctrl = ALU_NOP; // address calc + ADDI
+    end
+
+    else if (is_jal) begin
+        alu_ctrl = ALU_NOP;
     end
 
     else begin
