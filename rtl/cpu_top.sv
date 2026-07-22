@@ -26,8 +26,9 @@ logic [31:0] control_target;
 // currently being fetched 
 logic [31:0] pc;
 
-// Program counter of the next instruction 
-logic [31:0] next_pc;
+// PC+4 for next instruction if there is no 
+// control taken by another instruction
+logic [31:0] pc_plus_4;
 
 // Instruction fetched from instruction memory
 logic [31:0] instr;
@@ -43,8 +44,8 @@ logic [31:0] if_id_instr;
 // Needed for branch/JAL target calc later
 logic [31:0] if_id_pc;
 
-// PC of the next instruction pipelined into ID
-logic [31:0] if_id_next_pc;
+// PC+4 of instruction pipelined into ID
+logic [31:0] if_id_pc_plus_4;
 
 ///////////////////////////////////////////
 // Instruction Decode (ID) Signals 
@@ -96,8 +97,8 @@ logic [31:0] rd2;
 logic [31:0] id_ex_instr;
 logic [31:0] id_ex_pc;
 
-// PC of the next instruction pipelined into EX
-logic [31:0] id_ex_next_pc;
+// PC+4 of instruction pipelined into EX
+logic [31:0] id_ex_pc_plus_4;
 
 // Register operand values pipelined from ID to EX
 logic [31:0] id_ex_rd1;
@@ -156,7 +157,6 @@ logic mem_wb_regwrite;
 // For normal ALU/LUI instructions this is the result
 // For JAL/JALR, this is PC+4
 logic [31:0] ex_mem_forward_data;
-logic [31:0] mem_wb_forward_data;
 
 ///////////////////////////////////////////
 // EX Stage Signals 
@@ -261,6 +261,9 @@ logic [4:0]     wb_rd;
 // Instruction Fetch (IF) Stage
 ///////////////////////////////////////////
 
+// PC of next PC
+assign pc_plus_4 = pc + 32'd4
+
 // Sequential Logic (updates on clock edge)
 always_ff @( posedge clk ) begin
     if(reset)
@@ -271,7 +274,7 @@ always_ff @( posedge clk ) begin
         pc <= control_target;
     else if (!stall)
         // Only update PC if not stalling
-        next_pc <= pc + 32'd4;
+        pc <= pc_plus_4;
 end
 
 // Instantiate Instruction Memory
@@ -291,21 +294,23 @@ always_ff @( posedge clk )
 begin
     if(reset) begin
         // reset values if reset is on
-        if_id_instr <= 0;
-        if_id_pc <= 0;
-        if_id_next_pc <= 0;
+        if_id_instr     <= 32'd0;
+        if_id_pc        <= 32'd0;
+        if_id_pc_plus_4 <= 32'd0;
+
     end 
     else if (control_taken) begin
         // flush if control signal is on 
-        if_id_instr <= 0;
-        if_id_pc <= 0;
-        if_id_next_pc <= 0;
+        if_id_instr     <= 32'd0;
+        if_id_pc        <= 32'd0;
+        if_id_pc_plus_4 <= 32'd0;
+
     end
     else if (!stall) begin
         // Pass instruction to next stage
         if_id_instr <= instr;
         if_id_pc <= pc;
-        if_id_next_pc <= next_pc;
+        if_id_pc_plus_4 <= pc_plus_4;
     end
 end
 
@@ -384,7 +389,7 @@ always_ff @(posedge clk) begin
         // insert bubble into EX stage
         id_ex_instr     <= 32'd0;
         id_ex_pc        <= 32'd0;
-        id_ex_next_pc   <= 32'd0;
+        id_ex_pc_plus_4 <= 32'd0;
         id_ex_rd1       <= 32'd0;
         id_ex_rd2       <= 32'd0;
         id_ex_imm       <= 32'd0;
@@ -418,7 +423,7 @@ always_ff @(posedge clk) begin
         // Pipelined decoced instruction into EX
         id_ex_instr    <= if_id_instr;
         id_ex_pc       <= if_id_pc;
-        id_ex_next_pc  <= if_id_next_pc;
+        id_ex_pc_plus_4  <= if_id_pc_plus_4;
         id_ex_imm      <= imm;
         id_ex_rs1      <= rs1;
         id_ex_rs2      <= rs2;
@@ -543,7 +548,7 @@ assign ex_use_imm =
     id_ex_is_lui;
 
 // Link value for JAL/JALR
-assign ex_pc_plus_4 = id_ex_next_pc;
+assign ex_pc_plus_4 = id_ex_pc_plus_4;
 
 // Branch/JAL/JALR control unit 
 // Produces redirect decision, redirect target, 
@@ -582,11 +587,6 @@ alu alu_inst(
 // EX/MEM Pipeline Register
 ///////////////////////////////////////////
 
-// For normal instructions, forward normal data
-// For JAL/JALR, forward PC+4 because that is the writeback value
-assign ex_mem_forward_data = 
-    ex_mem_is_link ? ex_mem_pc_plus_4 : ex_mem_result;
-
 // Carries EX results into MEM
 // SW data uses forward_b so SWs can write
 // a recently computed value
@@ -616,6 +616,11 @@ always_ff @(posedge clk) begin
     end
 end
 
+// For normal instructions, forward normal data
+// For JAL/JALR, forward PC+4 because that is the writeback value
+assign ex_mem_forward_data = 
+    ex_mem_is_link ? ex_mem_pc_plus_4 : ex_mem_result;
+
 ///////////////////////////////////////////
 // MEM Stage
 ///////////////////////////////////////////
@@ -627,7 +632,9 @@ assign is_mem_store = (ex_mem_opcode == OPCODE_STORE);
 assign mem_re = is_mem_load;
 assign mem_we = is_mem_store;
 
-
+// For LW/SW, ex_mem_result becomes effective memory address
+// when mem_re or mem_we is off, then .addr is just a normal 
+// alu_result and nothing gets written to data_memory
 data_memory dmem(
     .clk(clk),
 
