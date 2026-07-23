@@ -189,19 +189,15 @@ always_comb begin
     else if(is_itype) begin
         case(funct3)
 
+            // SRA is not supported
             FUNCT3_ADD_SUB: alu_ctrl = ALU_ADD;     // ADDI
             FUNCT3_SLT: alu_ctrl = ALU_SLT;         // SLTI
             FUNCT3_XOR:  alu_ctrl = ALU_XOR;        // XORI
             FUNCT3_OR: alu_ctrl = ALU_OR;           // ORI
             FUNCT3_AND: alu_ctrl = ALU_AND;         // ANDI
             FUNCT3_SLL: alu_ctrl = ALU_SLL;         // SLLI
-            
-            FUNCT3_SR: begin
-                if(funct7 == FUNCT7_SRL)          // SRLI
-                    alu_ctrl = ALU_SRL;
-                else
-                    alu_ctrl = ALU_SRL;
-            end
+            FUNCT3_SR: alu_ctrl = ALU_SRL;          // SRLI
+                
         
             default: alu_ctrl = ALU_ADD;
         endcase
@@ -216,7 +212,7 @@ always_comb begin
     end
 
     else if (is_branch) begin
-        alu_ctrl = ALU_NOP; // address calc + ADDI
+        alu_ctrl = ALU_NOP; // branch comparison is handled in branch_control file
     end
 
     else if (is_jal) begin

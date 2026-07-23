@@ -22,7 +22,7 @@ logic [31:0] control_target;
 // Instruction Fetch (IF) Signals
 ///////////////////////////////////////////
 
-// Program counter, holds the address of the insturction
+// Program counter, holds the address of the instruction
 // currently being fetched 
 logic [31:0] pc;
 
@@ -69,7 +69,7 @@ logic [31:0] imm;
 logic [3:0] alu_ctrl;
 
 // Instruction classification flags from decode
-// These describe what type of isntruction is currently in ID 
+// These describe what type of instruction is currently in ID 
 logic is_load;
 logic is_store;
 logic is_branch;
@@ -107,7 +107,7 @@ logic [31:0] id_ex_rd2;
 // Immediate value pipelined into EX
 logic [31:0] id_ex_imm;
 
-// Register indexes corried into EX, needed for fowarding 
+// Register indexes carried into EX, needed for forwarding 
 // decisions and writeback destination tracking
 logic [4:0] id_ex_rs1;
 logic [4:0] id_ex_rs2;
@@ -169,10 +169,6 @@ logic [31:0] alu_result;
 // Used for I-type, LW/SWs address calcs, JALR calcs, and LUI 
 logic ex_use_imm;
 
-// PC+4 for instruction currently in EX
-// Used as the link value for JAL/JALR
-logic [31:0] ex_pc_plus_4;
-
 // Control decision signals from branch_control
 logic branch_cond_taken;
 logic jal_taken;
@@ -198,7 +194,7 @@ logic [31:0] ex_mem_store_data;
 // Used for JAL/JALR link writeback and forwarding
 logic [31:0] ex_mem_pc_plus_4;
 
-// Destination register and opcode carreid into MEM
+// Destination register and opcode carried into MEM
 logic [4:0] ex_mem_rd;
 logic [6:0] ex_mem_opcode;
 
@@ -241,7 +237,7 @@ logic [31:0] mem_wb_pc_plus_4;
 logic [4:0] mem_wb_rd;
 logic [6:0] mem_wb_opcode;
 
-// True when WB should write PC+4 beacuase instructions was JAL/JALR
+// True when WB should write PC+4 because instructions was JAL/JALR
 logic mem_wb_is_link;
 
 ///////////////////////////////////////////
@@ -262,7 +258,7 @@ logic [4:0]     wb_rd;
 ///////////////////////////////////////////
 
 // PC of next PC
-assign pc_plus_4 = pc + 32'd4
+assign pc_plus_4 = pc + 32'd4;
 
 // Sequential Logic (updates on clock edge)
 always_ff @( posedge clk ) begin
@@ -289,7 +285,7 @@ instruction_memory imem_inst(
 
 // IF/ID holds the fetched instruction and its PC
 // On redirects, IF/ID is flushed 
-// On stalls, ID/ID holds its current instruction value 
+// On stalls, IF/ID holds its current instruction value 
 always_ff @( posedge clk ) 
 begin
     if(reset) begin
@@ -364,7 +360,7 @@ register_file rf(
 // Detects load-use hazards between instruction in EX
 // and instruction in ID. If ID uses the destination 
 // of a load currently in EX, stall one cycle.
-hazard_unit hazard_unit_test(
+hazard_unit hazard_unit_inst(
     .id_ex_opcode(id_ex_opcode),
     .id_ex_rd(id_ex_rd),
 
@@ -382,7 +378,7 @@ hazard_unit hazard_unit_test(
 ///////////////////////////////////////////
 
 // ID/EX is cleared on reset, control redirect, or stall. 
-// Clearing on stall inserts a bubble into EX while IF/IF are 
+// Clearing on stall inserts a bubble into EX while IF/ID are frozen
 // Clearing on control_taken removes wrong-path/decode-stage instruciton
 always_ff @(posedge clk) begin
     if(reset || control_taken || stall) begin
@@ -420,7 +416,7 @@ always_ff @(posedge clk) begin
         id_ex_rd1 <= (wb_we &&(wb_rd != 5'd0) && (wb_rd == rs1)) ? wb_data : rd1;
         id_ex_rd2 <= (wb_we && (wb_rd != 5'd0) && (wb_rd == rs2)) ? wb_data: rd2;
 
-        // Pipelined decoced instruction into EX
+        // Pipelined decoded instruction into EX
         id_ex_instr    <= if_id_instr;
         id_ex_pc       <= if_id_pc;
         id_ex_pc_plus_4  <= if_id_pc_plus_4;
@@ -452,7 +448,7 @@ end
 ///////////////////////////////////////////
 
 // EX/MEM can forward ALU, I-type, LUI, JAL, and JALR results
-// LW is excluded because load data is not avaialable until memory access completes. 
+// LW is excluded because load data is not available until memory access completes. 
 assign ex_mem_regwrite = 
     (ex_mem_opcode == OPCODE_R_TYPE) ||
     (ex_mem_opcode == OPCODE_I_TYPE) ||
@@ -470,7 +466,7 @@ assign mem_wb_regwrite =
 
 
 // Produces forwarding select values for EX-stage operands
-// The actual muxing remians in this file so datapath flow is visible
+// The actual muxing remains in this file so datapath flow is visible
 forwarding_unit fwd_unit(
 
     .id_ex_rs1(id_ex_rs1),
@@ -547,9 +543,6 @@ assign ex_use_imm =
     id_ex_is_jalr  ||
     id_ex_is_lui;
 
-// Link value for JAL/JALR
-assign ex_pc_plus_4 = id_ex_pc_plus_4;
-
 // Branch/JAL/JALR control unit 
 // Produces redirect decision, redirect target, 
 // and debug-visible status signals
@@ -606,7 +599,7 @@ always_ff @(posedge clk) begin
         ex_mem_instr      <= id_ex_instr;
         ex_mem_result     <= alu_result;
         ex_mem_store_data <= forward_b;
-        ex_mem_pc_plus_4  <= ex_pc_plus_4;
+        ex_mem_pc_plus_4  <= id_ex_pc_plus_4;
 
         ex_mem_rd         <= id_ex_rd;
         ex_mem_opcode     <= id_ex_opcode;

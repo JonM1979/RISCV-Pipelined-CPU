@@ -25,12 +25,10 @@ module branch_control(
 );
 
 // Target Calculations
-logic [31:0] branch_target; // target address for the branch
-logic [31:0] jal_target; // target address for JAL
+logic [31:0] pc_rel_target; // shared relative PC target for branches and JAL
 logic [31:0] jalr_target; // target address for JALR
 
-assign branch_target = id_ex_pc + id_ex_imm;
-assign jal_target = id_ex_pc + id_ex_imm;
+assign pc_rel_target = id_ex_pc + id_ex_imm;
 assign jalr_target = (forward_a + id_ex_imm) & 32'hffff_fffe; 
 // JALR target address is computed as (rs1 + imm) with the least significant bit cleared
 
