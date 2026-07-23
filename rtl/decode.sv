@@ -177,9 +177,14 @@ always_comb begin
             FUNCT3_SLL: alu_ctrl = ALU_SLL;
             FUNCT3_SLT: alu_ctrl = ALU_SLT;
             FUNCT3_XOR:  alu_ctrl = ALU_XOR;
-            FUNCT3_SR: alu_ctrl = ALU_SRL;
             FUNCT3_OR: alu_ctrl = ALU_OR;
             FUNCT3_AND: alu_ctrl = ALU_AND;
+            FUNCT3_SR: begin
+                if(funct7 == FUNCT7_SRL)
+                    alu_ctrl = ALU_SRL;
+                else
+                    alu_ctrl = ALU_NOP; // SRA not supported
+            end
 
             default: alu_ctrl = ALU_ADD;
 
@@ -196,7 +201,13 @@ always_comb begin
             FUNCT3_OR: alu_ctrl = ALU_OR;           // ORI
             FUNCT3_AND: alu_ctrl = ALU_AND;         // ANDI
             FUNCT3_SLL: alu_ctrl = ALU_SLL;         // SLLI
-            FUNCT3_SR: alu_ctrl = ALU_SRL;          // SRLI
+            FUNCT3_SR: begin
+                if(funct7 == FUNCT7_SRL)
+                    alu_ctrl = ALU_SRL; // SRLI
+                else
+                    alu_ctrl = ALU_NOP; // SRAI not supported
+            end
+
                 
         
             default: alu_ctrl = ALU_ADD;

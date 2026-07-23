@@ -71,10 +71,10 @@ assign control_taken = branch_cond_taken || jal_taken || jalr_taken;
 
 always_comb begin
     if(branch_cond_taken) begin
-        control_target = branch_target;
+        control_target = pc_rel_target;
     end 
     else if (jal_taken) begin
-        control_target = jal_target;
+        control_target = pc_rel_target;
     end 
     else if(jalr_taken) begin
         control_target = jalr_target;

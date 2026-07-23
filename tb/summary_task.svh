@@ -106,13 +106,7 @@ begin
     $fdisplay(summary_file, "\n=======================================================\n");
 
     $display("\nSUMMARY:");
-    $display("Cycles=%0d | Retired=%0d | CPI=%0f | IPC=%0f",
-             cycle_count, retired_count, calc_cpi(), calc_ipc());
-    $display("Stalls=%0d | Branches Taken=%0d | JALs=%0d | JALRs=%0d | Forwards=%0d",
-            stall_count,
-            branch_taken_count,
-            jal_taken_count,
-            jalr_taken_count,
-            total_forward_count);
+
+    $display("PROCESSOR SUCCESS; PLEASE CHECK SUMMARY FILES FOR PERFORMANCE");
 end
 endtask
