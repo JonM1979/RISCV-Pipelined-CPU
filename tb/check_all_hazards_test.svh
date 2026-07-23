@@ -146,7 +146,7 @@ begin
     //   lw x11 -> add x12
     //   lw x13 -> add x14
     expect_counter(stall_count,          2, "Total stall cycles");
-    expect_counter(load_use_stall_count, 2, "Load-use stall count");
+    expect_counter(stall_count,          2, "Load-use stall count");
 
     // Two taken branches:
     //   BEQ
@@ -159,8 +159,7 @@ begin
 
     // Control redirects:
     //   BEQ + BNE + JAL + JALR = 4
-    expect_counter(control_count,        4, "Control redirect count");
-    expect_counter(flush_count,          4, "Flush count");
+    expect_counter(control_count,        4, "Control redirect/flush count");
 
     //////////////////////////////////////////////////////
     // Existing forwarding counter sanity checks

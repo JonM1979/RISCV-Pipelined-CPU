@@ -14,9 +14,7 @@ int unsigned stall_count;
 int unsigned control_count;
 
 // Hazard/Control counters
-int unsigned load_use_stall_count;
 int unsigned branch_taken_count;
-int unsigned flush_count;
 int unsigned jal_taken_count;
 int unsigned jalr_taken_count;
 

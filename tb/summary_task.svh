@@ -64,15 +64,13 @@ begin
     $fdisplay(summary_file, "\n[PIPELINE HAZARDS]");
     $fdisplay(summary_file, "Stall Cycles             : %0d", stall_count);
     $fdisplay(summary_file, "Stall Rate               : %0f%%", calc_stall_rate());
-    $fdisplay(summary_file, "Load-Use Stalls          : %0d", load_use_stall_count);
 
     $fdisplay(summary_file, "\n[CONTROL FLOW]");
     $fdisplay(summary_file, "Taken Branches           : %0d", branch_taken_count);
     $fdisplay(summary_file, "Taken JALs               : %0d", jal_taken_count);
     $fdisplay(summary_file, "Taken JALRs              : %0d", jalr_taken_count);
     $fdisplay(summary_file, "Taken Jumps Total        : %0d", jal_taken_count + jalr_taken_count);
-    $fdisplay(summary_file, "Control Redirects        : %0d", control_count);
-    $fdisplay(summary_file, "Flush Events             : %0d", flush_count);
+    $fdisplay(summary_file, "Control Redirects/Flushes: %0d", control_count);
     $fdisplay(summary_file, "Control Redirect Rate    : %0f%%", calc_control_redirect_rate());
 
     $fdisplay(summary_file, "\n[INSTRUCTION MIX]");

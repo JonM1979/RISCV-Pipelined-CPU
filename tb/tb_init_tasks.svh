@@ -35,9 +35,7 @@ begin
     stall_count   = 0;
     control_count = 0;
 
-    load_use_stall_count = 0;
     branch_taken_count   = 0;
-    flush_count          = 0;
     jal_taken_count      = 0;
     jalr_taken_count     = 0;
 

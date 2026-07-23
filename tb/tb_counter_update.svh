@@ -55,13 +55,11 @@ begin
     // Stall / hazard counters
     if (uut.stall) begin
         stall_count <= stall_count + 1;
-        load_use_stall_count <= load_use_stall_count + 1;
     end
 
     // Control hazard counters
     if (uut.control_taken) begin
         control_count <= control_count + 1;
-        flush_count <= flush_count + 1;
     end
 
     if (uut.branch_cond_taken) begin
