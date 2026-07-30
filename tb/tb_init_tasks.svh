@@ -33,6 +33,9 @@ begin
     cycle_count   = 0;
     retired_count = 0;
     stall_count   = 0;
+    branch_count = 0;
+    branch_mispredicts = 0;
+    jalr_count_bp = 0;
     control_count = 0;
 
     branch_taken_count   = 0;

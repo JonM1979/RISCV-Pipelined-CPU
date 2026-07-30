@@ -29,8 +29,9 @@ logic [31:0] pc_rel_target; // shared relative PC target for branches and JAL
 logic [31:0] jalr_target; // target address for JALR
 
 assign pc_rel_target = id_ex_pc + id_ex_imm;
-assign jalr_target = (forward_a + id_ex_imm) & 32'hffff_fffe; 
-// JALR target address is computed as (rs1 + imm) with the least significant bit cleared
+
+// JALR target is (rs1 + imm) with bit 0 cleared, per the RISC-V spec
+assign jalr_target = (forward_a + id_ex_imm) & 32'hffff_fffe;
 
 assign jal_taken = id_ex_is_jal;
 assign jalr_taken = id_ex_is_jalr;
@@ -42,25 +43,16 @@ always_comb begin
     if(id_ex_is_branch) begin
         case(id_ex_funct3)
 
-            FUNCT3_BEQ: begin
-                branch_cond_taken = (forward_a == forward_b);
-            end
+            FUNCT3_BEQ:  branch_cond_taken = (forward_a == forward_b);
+            FUNCT3_BNE:  branch_cond_taken = (forward_a != forward_b);
 
-            FUNCT3_BNE: begin
-                branch_cond_taken = (forward_a != forward_b);
-            end
+            FUNCT3_BLT:  branch_cond_taken = ($signed(forward_a) <  $signed(forward_b));
+            FUNCT3_BGE:  branch_cond_taken = ($signed(forward_a) >= $signed(forward_b));
 
-            FUNCT3_BLT: begin
-                branch_cond_taken = ($signed(forward_a) < $signed(forward_b));
-            end
+            FUNCT3_BLTU: branch_cond_taken = (forward_a < forward_b);
+            FUNCT3_BGEU: branch_cond_taken = (forward_a >= forward_b);
 
-            FUNCT3_BGE: begin
-                branch_cond_taken = ($signed(forward_a) >= $signed(forward_b));
-            end
-
-            default: begin
-                branch_cond_taken = 1'b0; // For unsupported funct3 values, default to not taken
-            end
+            default: branch_cond_taken = 1'b0; // For unsupported funct3 values, default to not taken
         endcase
     end
 end
@@ -70,18 +62,12 @@ end
 assign control_taken = branch_cond_taken || jal_taken || jalr_taken;
 
 always_comb begin
-    if(branch_cond_taken) begin
-        control_target = pc_rel_target;
-    end 
-    else if (jal_taken) begin
-        control_target = pc_rel_target;
-    end 
-    else if(jalr_taken) begin
+    if (branch_cond_taken || jal_taken)
+        control_target = pc_rel_target; // both are PC-relative
+    else if (jalr_taken)
         control_target = jalr_target;
-    end 
-    else begin
-        control_target = 32'd0; // Default target when no control flow instruction is taken
-    end
+    else
+        control_target = 32'd0;         // no redirect active
 end
 
 endmodule

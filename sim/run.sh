@@ -15,7 +15,9 @@ set -e
 #
 # ================================================
 
+# Usage: ./run.sh <program.s|program.hex> [expected_trap_cause]
 PROGRAM=${1:-../programs/full_instruction_test.s}
+EXPECT_CAUSE=${2:-}
 HEX_FILE=program.hex
 
 
@@ -39,12 +41,21 @@ rm -f "$HEX_FILE"
 rm -f trace.log instruction_trace.log summary.log
 
 echo ""
-echo "Assembling program..."
-python3 ../tools/asm_to_hex.py "$PROGRAM" "$HEX_FILE"
+# A .hex input is used directly; anything else is assembled first.
+case "$PROGRAM" in
+    *.hex)
+        echo "Using pre-assembled hex image..."
+        cp "$PROGRAM" "$HEX_FILE"
+        ;;
+    *)
+        echo "Assembling program..."
+        python3 ../tools/asm_to_hex.py "$PROGRAM" "$HEX_FILE"
+        ;;
+esac
 
 echo ""
 echo "Compiling with Verilator..."
-verilator -Wall --I../rtl --I../tb --timing -Wno-fatal --cc ../rtl/*.sv ../tb/tb_cpu.sv --top-module tb_cpu --exe sim_main.cpp
+verilator -Wall --assert --I../rtl --I../tb --timing -Wno-fatal --cc ../rtl/*.sv ../tb/tb_cpu.sv --top-module tb_cpu --exe sim_main.cpp
 
 echo ""
 echo "Building..."
@@ -52,8 +63,13 @@ make -C obj_dir -f Vtb_cpu.mk Vtb_cpu
 
 echo ""
 echo "Running simulation..."
-TEST_NAME=$(basename "$PROGRAM" .s)
+TEST_NAME=$(basename "$PROGRAM" | sed 's/\.[^.]*$//')
+
+PLUSARGS="+TEST=$TEST_NAME"
+if [ -n "$EXPECT_CAUSE" ]; then
+    PLUSARGS="$PLUSARGS +EXPECT_CAUSE=$EXPECT_CAUSE"
+fi
 
 echo ""
 echo "Running simulation: $TEST_NAME"
-./obj_dir/Vtb_cpu +TEST="$TEST_NAME"
+./obj_dir/Vtb_cpu $PLUSARGS

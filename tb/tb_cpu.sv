@@ -9,7 +9,11 @@ module tb_cpu;
 // DUT (Device Under Test) Instantiation
 cpu_top uut (
     .clk(clk),
-    .reset(reset)
+    .reset(reset),
+
+    .trap_valid(trap_valid),
+    .trap_cause(trap_cause),
+    .trap_pc(trap_pc)
 );
 
 // INCLUDE TASKS FILES
@@ -25,6 +29,8 @@ cpu_top uut (
 `include "check_all_hazards_test.svh"
 `include "check_dispatch.svh"
 `include "self_check_test.svh"
+`include "trap_report.svh"
+
 // CLOCK GENERATOR
 always #5 clk <= ~clk;
 
@@ -39,7 +45,14 @@ initial begin
 
     $display("Running test: %s", test_name);
 
-
+    // Tests whose name begins with "trap_" are expected to raise a trap.
+    // The expected cause is supplied with +EXPECT_CAUSE=<n>.
+    if (test_name.len() >= 5 && test_name.substr(0, 4) == "trap_") begin
+        expect_trap = 1'b1;
+        if (!$value$plusargs("EXPECT_CAUSE=%d", expected_cause)) begin
+            expected_cause = -1; // any cause accepted
+        end
+    end
     initialize_counters();
 
     clk = 0;
@@ -70,6 +83,12 @@ always @(negedge clk) begin
     if (!reset) begin
         instruction_trace();
         data_trace();
+
+        // A trap ends the run immediately and is reported as a failure
+        // unless the test explicitly expects it.
+        if (trap_valid) begin
+            report_trap();
+        end
 
         // End only after HALT is visibly in WB in the trace
         if (uut.mem_wb_instr == HALT_INSTR) begin

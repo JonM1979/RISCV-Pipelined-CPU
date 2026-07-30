@@ -13,6 +13,11 @@ int unsigned retired_count;
 int unsigned stall_count;
 int unsigned control_count;
 
+// Branch prediction statistics
+int unsigned branch_count; // conditional branches resolved
+int unsigned branch_mispredicts; // of those, predicted wrongly
+int unsigned jalr_count_bp; // JALR is never predicted 
+
 // Hazard/Control counters
 int unsigned branch_taken_count;
 int unsigned jal_taken_count;
@@ -42,3 +47,12 @@ localparam logic [31:0] HALT_INSTR = 32'h00500013; // ADDI x0, x0, 5
 integer summary_file;
 integer instruction_file;
 integer trace_file;
+
+// Trap interface
+logic        trap_valid;
+logic [3:0]  trap_cause;
+logic [31:0] trap_pc;
+
+// Set by a test that intends to trap (e.g. an illegal-instruction test)
+bit expect_trap = 1'b0;
+int expected_cause = -1;

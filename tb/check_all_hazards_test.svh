@@ -159,7 +159,10 @@ begin
 
     // Control redirects:
     //   BEQ + BNE + JAL + JALR = 4
-    expect_counter(control_count,        4, "Control redirect/flush count");
+    // Three, not four. The core predicts branch direction in IF, so a branch
+    // that is predicted correctly no longer costs a redirect. One of this
+    // program's taken branches is predicted correctly by the time it executes.
+    expect_counter(control_count,        3, "Control redirect/flush count");
 
     //////////////////////////////////////////////////////
     // Existing forwarding counter sanity checks

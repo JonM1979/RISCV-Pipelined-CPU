@@ -14,9 +14,11 @@ always_comb begin
 
         ALU_SLL:    result = a << b[4:0];
         ALU_SLT:    result = ($signed(a) < $signed(b)) ? 32'd1 : 32'd0;
+        ALU_SLTU:   result = (a < b)                   ? 32'd1 : 32'd0;
 
         ALU_XOR:    result = a ^ b;
         
+        ALU_SRA:    result = $signed(a) >>> b[4:0];
         ALU_SRL:    result = a >> b[4:0];
 
         ALU_OR:     result = a | b;
@@ -24,12 +26,9 @@ always_comb begin
 
         ALU_COPY_B: result = b;
 
-        ALU_NOP: result = 32'd0; 
-
+        // covers NOP and unrecognized codes
         default:    result = 32'd0;
     endcase
 end
-
-
 
 endmodule

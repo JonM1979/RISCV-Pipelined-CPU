@@ -78,7 +78,7 @@ begin
     $fdisplay(trace_file,
         "  Funct3 / Funct7   : %0h / %02h",
         uut.funct3,
-        uut.funct7
+        uut.dec.funct7
     );
 
     $fdisplay(trace_file,
@@ -110,7 +110,7 @@ begin
 
     $fdisplay(trace_file,
         "  Type Flags        : R=%0b I=%0b LOAD=%0b STORE=%0b BRANCH=%0b JAL=%0b JALR=%0b LUI=%0b",
-        uut.is_rtype,
+        uut.dec.is_rtype,
         uut.is_itype,
         uut.is_load,
         uut.is_store,

@@ -107,3 +107,18 @@ begin
     end
 end
 endtask
+
+// Branch prediction accounting.
+// A conditional branch is counted once, as it resolves in EX. It is charged
+// a misprediction whenever the resolved outcome forces a redirect.
+always_ff @(posedge clk) begin
+    if (!reset && uut.id_ex_valid) begin
+        if (uut.id_ex_is_branch) begin
+            branch_count <= branch_count + 1;
+            if (uut.control_taken)
+                branch_mispredicts <= branch_mispredicts + 1;
+        end
+        if (uut.id_ex_is_jalr)
+            jalr_count_bp <= jalr_count_bp + 1;
+    end
+end
