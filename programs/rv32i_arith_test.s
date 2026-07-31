@@ -17,6 +17,26 @@ bne  x3, x20, fail
 sltiu x3, x2, 1             # 1 <u 1 -> 0
 bnez x3, fail
 
+# ---- SUB (previously only exercised incidentally by another test) ----
+li   x11, 10
+li   x12, 3
+sub  x13, x11, x12          # 10 - 3 = 7
+li   x23, 7
+bne  x13, x23, fail
+
+sub  x14, x12, x11          # 3 - 10 = -7 (result goes negative)
+li   x24, -7
+bne  x14, x24, fail
+
+# unsigned wraparound: 0xFFFFFFFF + 1 must wrap to 0, not trap or saturate
+li   x15, -1                # 0xFFFFFFFF
+addi x16, x15, 1            # wraps to 0
+bnez x16, fail
+
+sub  x17, x0, x15           # 0 - 0xFFFFFFFF wraps to 1
+li   x25, 1
+bne  x17, x25, fail
+
 # ---- SRA / SRAI (arithmetic shift sign-extends) ----
 li   x4, -16                # 0xFFFFFFF0
 li   x5, 2
