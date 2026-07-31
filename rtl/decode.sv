@@ -24,7 +24,6 @@ module decode(
     output logic is_load,
     output logic is_store,
     output logic is_branch,
-    output logic is_rtype,
     output logic is_itype,
     output logic is_jal,
     output logic is_jalr,

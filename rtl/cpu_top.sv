@@ -59,7 +59,7 @@ logic [31:0]    if_imm_j;
 logic [31:0]    if_pc_rel_target;
 logic           bht_predict_taken;
 logic           predict_taken;
-logic [31:0]    predict_taken;
+logic [31:0]    predict_target;
 logic [31:0]    next_pc;
 
 
@@ -196,8 +196,6 @@ logic jal_taken;
 logic jalr_taken;
 logic actual_taken;
 logic [31:0] actual_target;
-logic control_taken;
-logic [31:0] control_target;
 
 // Keeps track of predictor
 logic bp_update_en;
@@ -237,7 +235,6 @@ logic ex_mem_is_link;
 // forward data to where it needs to
 logic ex_mem_reg_write;
 logic ex_mem_can_forward;
-logic ex_mem_is_link;
 logic ex_mem_is_load, ex_mem_is_store;
 
 logic [1:0] ex_mem_mem_size;
@@ -465,7 +462,7 @@ decode dec(
     .mem_size(mem_size),
     .mem_unsigned(mem_unsigned),
 
-    .alu_ctrl(alu_ctrl)
+    .alu_ctrl(alu_ctrl),
     .illegal_instr(illegal_instr)
 );
 
@@ -511,7 +508,7 @@ end
 // and instruction in ID. If ID uses the destination 
 // of a load currently in EX, stall one cycle.
 hazard_unit hazard_unit_inst(
-    .id_ex_opcode(id_ex_opcode),
+    .id_ex_is_load(id_ex_is_load),
     .id_ex_rd(id_ex_rd),
 
     .id_rs1(rs1),
@@ -583,7 +580,7 @@ always_ff @(posedge clk) begin
         id_ex_instr    <= if_id_instr;
         id_ex_pc       <= if_id_pc;
         id_ex_pc_plus_4  <= if_id_pc_plus_4;
-        id_ex_valid <= if_id_valid
+        id_ex_valid <= if_id_valid;
 
         id_ex_opcode   <= opcode;
         id_ex_funct3   <= funct3;
@@ -608,7 +605,7 @@ always_ff @(posedge clk) begin
         id_ex_uses_rs2  <= uses_rs2;
 
         // A faulting instruction should not write architectural state
-        id_ex_reg_write <= reg_write && if_id_valid && !id_excpetion;
+        id_ex_reg_write <= reg_write && if_id_valid && !id_exception;
 
         id_ex_mem_size  <= mem_size;
         id_ex_mem_unsigned <= mem_unsigned;
@@ -639,11 +636,10 @@ forwarding_unit fwd_unit(
     .ex_mem_reg_write(ex_mem_can_forward),
 
     .mem_wb_rd(mem_wb_rd),
-    .mem_wb_reg_write(mem_wb_regwrite),
+    .mem_wb_reg_write(mem_wb_reg_write),
 
     .forward_a_sel(forward_a_sel),
     .forward_b_sel(forward_b_sel)
-
 );
 
 ///////////////////////////////////////////
@@ -848,7 +844,7 @@ data_memory dmem(
     .write_data(ex_mem_store_data),
     .mem_size(ex_mem_mem_size),
 
-    .read_data(mem_read_data)
+    .read_data(mem_read_data),
 
     .misaligned(mem_misaligned),
     .out_of_range(mem_out_of_range)
