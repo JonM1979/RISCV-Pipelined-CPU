@@ -1,1 +1,138 @@
+name: CPU Regression
+
+# Runs on every push and pull request to main, plus a weekly scheduled run so
+# toolchain drift is caught even when the repo is idle.
+#
+# The simulation is built with --assert, so an SVA property violation fails
+# the build even when every functional test still reports PASS.
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  schedule:
+    - cron: '0 6 * * 1'      # Mondays 06:00 UTC
+  workflow_dispatch:
+
+jobs:
+  lint:
+    name: Verilator lint
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Install Verilator
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y verilator
+          verilator --version
+
+      # Synthesis view: the RTL alone, with no testbench.
+      #
+      # UNUSEDPARAM is waived because defines.svh is a shared encoding header.
+      # It intentionally carries the full RV32I constant set, including a few
+      # constants only the testbench disassembler consumes. Every other
+      # warning class is fatal.
+      - name: Lint RTL (synthesis view)
+        run: |
+          verilator --lint-only -Wall --assert \
+            -Wno-UNUSEDPARAM \
+            -Irtl rtl/*.sv \
+            --top-module cpu_top
+
+      # Build view: exactly what the simulation compiles. No warnings allowed.
+      - name: Lint full design (build view)
+        run: |
+          verilator --lint-only -Wall --assert --timing \
+            -Irtl -Itb rtl/*.sv tb/tb_cpu.sv \
+            --top-module tb_cpu
+
+  regression:
+    name: Verilator regression
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    needs: lint
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Install Verilator
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y verilator
+          verilator --version
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      # Assemble everything before simulating, so a toolchain regression is
+      # reported separately from an RTL regression.
+      - name: Assembler self-check
+        run: |
+          for prog in programs/*.s; do
+            echo "Assembling $prog"
+            python3 tools/asm_to_hex.py "$prog" /tmp/check.hex > /dev/null
+          done
+          echo "All programs assembled successfully"
+
+      - name: Run functional tests
+        working-directory: sim
+        run: |
+          chmod +x run.sh run_all.sh
+          ./run_all.sh functional
+
+      - name: Run trap tests
+        working-directory: sim
+        run: ./run_all.sh trap
+
+      - name: Run full regression
+        working-directory: sim
+        run: ./run_all.sh all
+
+      # Surface headline numbers in the Actions summary so a reviewer sees
+      # CPI, IPC and prediction accuracy without downloading an artifact.
+      - name: Publish results summary
+        if: always()
+        working-directory: sim
+        run: |
+          {
+            echo "## Regression results"
+            echo ""
+            if [ -f regression.log ]; then
+              echo '```'
+              grep -E "^(PASS:|FAIL:|ALL TESTS|REGRESSION FAILED|Passed)" \
+                regression.log || true
+              echo '```'
+            fi
+            echo ""
+            echo "## Performance and prediction"
+            echo ""
+            if [ -f summary_all.log ]; then
+              echo '```'
+              grep -E "^TEST:|CPI|IPC|Prediction Accuracy|MPKI|Stall Cycles" \
+                summary_all.log || true
+              echo '```'
+            fi
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Upload regression logs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: regression-logs
+          path: |
+            sim/regression.log
+            sim/summary_all.log
+            sim/trace_all.log
+            sim/instruction_trace_all.log
+            sim/program_all.hex
+          retention-days: 14
+          if-no-files-found: warn
 
