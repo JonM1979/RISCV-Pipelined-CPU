@@ -1,1 +1,6 @@
+{
+  "name": "RISCV-Pipelined-CPU",
+  "image": "mcr.microsoft.com/devcontainers/base:ubuntu-24.04",
 
+  "postCreateCommand": "bash .devcontainer/setup.sh"
+}
