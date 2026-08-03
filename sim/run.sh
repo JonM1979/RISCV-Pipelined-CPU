@@ -47,6 +47,15 @@ case "$PROGRAM" in
         echo "Using pre-assembled hex image..."
         cp "$PROGRAM" "$HEX_FILE"
         ;;
+    *.S)
+        # Official riscv-tests sources (uppercase .S, matching upstream's own
+        # convention) use C-preprocessor #include and GNU assembler macros
+        # that tools/asm_to_hex.py cannot parse. These are compiled by the
+        # real RISC-V GNU toolchain instead -- see
+        # tools/riscv-tests-mini/build_and_convert.sh.
+        echo "Compiling official riscv-tests source via GNU toolchain..."
+        ../tools/riscv-tests-mini/build_and_convert.sh "$PROGRAM" "$HEX_FILE"
+        ;;
     *)
         echo "Assembling program..."
         python3 ../tools/asm_to_hex.py "$PROGRAM" "$HEX_FILE"
@@ -65,10 +74,27 @@ echo ""
 echo "Running simulation..."
 TEST_NAME=$(basename "$PROGRAM" | sed 's/\.[^.]*$//')
 
+# The testbench's compliance checker (tb/riscv_compliance.svh) is selected by
+# a "riscvtest_" name prefix. Apply it here based on the .S extension rather
+# than renaming the vendored upstream files, so programs/riscv-tests/ stays
+# byte-identical to the official riscv-tests repository.
+case "$PROGRAM" in
+    *.S) TEST_NAME="riscvtest_${TEST_NAME}" ;;
+esac
+
 PLUSARGS="+TEST=$TEST_NAME"
 if [ -n "$EXPECT_CAUSE" ]; then
     PLUSARGS="$PLUSARGS +EXPECT_CAUSE=$EXPECT_CAUSE"
 fi
+
+# riscv-tests images are substantially longer than this project's own
+# hand-written tests (hundreds of instructions vs. dozens), so they need a
+# much larger safety-timeout budget.
+case "$TEST_NAME" in
+    riscvtest_*)
+        PLUSARGS="$PLUSARGS +MAX_CYCLES=20000"
+        ;;
+esac
 
 echo ""
 echo "Running simulation: $TEST_NAME"

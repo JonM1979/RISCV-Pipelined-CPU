@@ -10,9 +10,10 @@ shopt -s nullglob
 # output into combined log files.
 #
 # Usage:
-#   ./run_all.sh            run everything
-#   ./run_all.sh functional run only the functional tests
-#   ./run_all.sh trap       run only the trap tests
+#   ./run_all.sh              run everything
+#   ./run_all.sh functional   run only the functional tests
+#   ./run_all.sh trap         run only the trap tests
+#   ./run_all.sh compliance   run only the riscv-tests compliance tests
 #
 # Test manifest format:
 #   "<program>|<expected_trap_cause>"
@@ -26,6 +27,11 @@ shopt -s nullglob
 # Programs ending in .hex are loaded directly rather than
 # assembled. Illegal-instruction tests use that path because the
 # assembler refuses to emit illegal encodings by design.
+#
+# Programs ending in .S (uppercase, matching upstream's own
+# convention) are official riscv-tests sources, compiled through
+# the real RISC-V GNU toolchain rather than tools/asm_to_hex.py --
+# see tools/riscv-tests-mini/build_and_convert.sh.
 #
 # Combined outputs:
 #   regression.log, summary_all.log, trace_all.log,
@@ -58,14 +64,63 @@ TRAP_TESTS=(
     "../programs/trap_illegal_opcode.hex|2"
 )
 
+# Official RISC-V Foundation riscv-tests (isa/rv32ui/*.S), vendored unmodified
+# into programs/riscv-tests/ -- byte-identical to upstream, verifiable with a
+# plain diff against a fresh clone of riscv-software-src/riscv-tests.
+#
+# run.sh routes .S files through the real RISC-V GNU toolchain (see
+# tools/riscv-tests-mini/build_and_convert.sh), compiled against env-mini, a
+# CSR-free stand-in for the official harness (this core has no CSRs). Each
+# test's own concluding ECALL is the pass/fail signal (a0 = 0 for pass),
+# recognised via the "riscvtest_" test-name prefix that run.sh applies for
+# any .S input.
+#
+# The load/store family (lb, lh, lw, sb, sh, sw, ld_st, st_ld, ma_data) and
+# fence_i are not yet included: they require pre-populated data memory or an
+# unimplemented instruction (FENCE.I) respectively. See
+# RISCV_TESTS_STATUS.md for details and how to extend this list.
+COMPLIANCE_TESTS=(
+    "../programs/riscv-tests/rv32ui/add.S|"
+    "../programs/riscv-tests/rv32ui/addi.S|"
+    "../programs/riscv-tests/rv32ui/and.S|"
+    "../programs/riscv-tests/rv32ui/andi.S|"
+    "../programs/riscv-tests/rv32ui/auipc.S|"
+    "../programs/riscv-tests/rv32ui/beq.S|"
+    "../programs/riscv-tests/rv32ui/bge.S|"
+    "../programs/riscv-tests/rv32ui/bgeu.S|"
+    "../programs/riscv-tests/rv32ui/blt.S|"
+    "../programs/riscv-tests/rv32ui/bltu.S|"
+    "../programs/riscv-tests/rv32ui/bne.S|"
+    "../programs/riscv-tests/rv32ui/jal.S|"
+    "../programs/riscv-tests/rv32ui/jalr.S|"
+    "../programs/riscv-tests/rv32ui/lui.S|"
+    "../programs/riscv-tests/rv32ui/or.S|"
+    "../programs/riscv-tests/rv32ui/ori.S|"
+    "../programs/riscv-tests/rv32ui/simple.S|"
+    "../programs/riscv-tests/rv32ui/sll.S|"
+    "../programs/riscv-tests/rv32ui/slli.S|"
+    "../programs/riscv-tests/rv32ui/slt.S|"
+    "../programs/riscv-tests/rv32ui/slti.S|"
+    "../programs/riscv-tests/rv32ui/sltiu.S|"
+    "../programs/riscv-tests/rv32ui/sltu.S|"
+    "../programs/riscv-tests/rv32ui/sra.S|"
+    "../programs/riscv-tests/rv32ui/srai.S|"
+    "../programs/riscv-tests/rv32ui/srl.S|"
+    "../programs/riscv-tests/rv32ui/srli.S|"
+    "../programs/riscv-tests/rv32ui/sub.S|"
+    "../programs/riscv-tests/rv32ui/xor.S|"
+    "../programs/riscv-tests/rv32ui/xori.S|"
+)
+
 MODE="${1:-all}"
 
 case "$MODE" in
     functional) TESTS=("${FUNCTIONAL_TESTS[@]}") ;;
     trap)       TESTS=("${TRAP_TESTS[@]}") ;;
-    all)        TESTS=("${FUNCTIONAL_TESTS[@]}" "${TRAP_TESTS[@]}") ;;
+    compliance) TESTS=("${COMPLIANCE_TESTS[@]}") ;;
+    all)        TESTS=("${FUNCTIONAL_TESTS[@]}" "${TRAP_TESTS[@]}" "${COMPLIANCE_TESTS[@]}") ;;
     *)
-        echo "Usage: ./run_all.sh [all|functional|trap]"
+        echo "Usage: ./run_all.sh [all|functional|trap|compliance]"
         exit 1
         ;;
 esac
