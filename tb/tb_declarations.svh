@@ -56,3 +56,5 @@ logic [31:0] trap_pc;
 // Set by a test that intends to trap (e.g. an illegal-instruction test)
 bit expect_trap = 1'b0;
 int expected_cause = -1;
+bit is_riscv_test = 1'b0;
+int max_cycles;

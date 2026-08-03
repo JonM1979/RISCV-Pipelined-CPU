@@ -67,6 +67,15 @@ jobs:
           sudo apt-get install -y verilator
           verilator --version
 
+      # Needed to compile the vendored riscv-tests sources in
+      # programs/riscv-tests/ -- their #include-based structure requires the
+      # real toolchain, not tools/asm_to_hex.py. See
+      # tools/riscv-tests-mini/build_and_convert.sh.
+      - name: Install RISC-V GNU toolchain
+        run: |
+          sudo apt-get install -y gcc-riscv64-unknown-elf binutils-riscv64-unknown-elf
+          riscv64-unknown-elf-gcc -march=rv32i -mabi=ilp32 --version
+
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
@@ -74,7 +83,7 @@ jobs:
 
       # Assemble everything before simulating, so a toolchain regression is
       # reported separately from an RTL regression.
-      - name: Assembler self-check
+      - name: Assembler self-check (project's own test programs)
         run: |
           for prog in programs/*.s; do
             echo "Assembling $prog"
@@ -82,11 +91,23 @@ jobs:
           done
           echo "All programs assembled successfully"
 
+      - name: Compiler self-check (vendored riscv-tests sources)
+        run: |
+          for prog in programs/riscv-tests/rv32ui/*.S; do
+            echo "Compiling $prog"
+            tools/riscv-tests-mini/build_and_convert.sh "$prog" /tmp/check.hex > /dev/null
+          done
+          echo "All riscv-tests sources compiled successfully"
+
       - name: Run functional tests
         working-directory: sim
         run: |
           chmod +x run.sh run_all.sh
           ./run_all.sh functional
+
+      - name: Run compliance tests
+        working-directory: sim
+        run: ./run_all.sh compliance
 
       - name: Run trap tests
         working-directory: sim
@@ -135,4 +156,3 @@ jobs:
             sim/program_all.hex
           retention-days: 14
           if-no-files-found: warn
-
