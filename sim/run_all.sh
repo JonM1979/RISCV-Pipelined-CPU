@@ -75,10 +75,17 @@ TRAP_TESTS=(
 # recognised via the "riscvtest_" test-name prefix that run.sh applies for
 # any .S input.
 #
-# The load/store family (lb, lh, lw, sb, sh, sw, ld_st, st_ld, ma_data) and
-# fence_i are not yet included: they require pre-populated data memory or an
-# unimplemented instruction (FENCE.I) respectively. See
-# RISCV_TESTS_STATUS.md for details and how to extend this list.
+# The load/store family (lb, lh, lw, lbu, lhu, sb, sh, sw, ld_st, st_ld) is
+# included: data_memory.sv preloads data.hex at reset, which run.sh generates
+# from each test's .data section.
+#
+# Two tests remain excluded by design, not oversight:
+#   - ma_data:  tests that MISALIGNED accesses return correct data, i.e. a core
+#               that supports misaligned access or traps-and-resumes. This core
+#               traps precisely and halts on misalignment (a documented design
+#               choice), so this test can never pass and is excluded permanently.
+#   - fence_i:  requires FENCE.I, an instruction this core does not implement.
+# See RISCV_TESTS_STATUS.md for details.
 COMPLIANCE_TESTS=(
     "../programs/riscv-tests/rv32ui/add.S|"
     "../programs/riscv-tests/rv32ui/addi.S|"
@@ -110,6 +117,16 @@ COMPLIANCE_TESTS=(
     "../programs/riscv-tests/rv32ui/sub.S|"
     "../programs/riscv-tests/rv32ui/xor.S|"
     "../programs/riscv-tests/rv32ui/xori.S|"
+    "../programs/riscv-tests/rv32ui/lb.S|"
+    "../programs/riscv-tests/rv32ui/lbu.S|"
+    "../programs/riscv-tests/rv32ui/lh.S|"
+    "../programs/riscv-tests/rv32ui/lhu.S|"
+    "../programs/riscv-tests/rv32ui/lw.S|"
+    "../programs/riscv-tests/rv32ui/sb.S|"
+    "../programs/riscv-tests/rv32ui/sh.S|"
+    "../programs/riscv-tests/rv32ui/sw.S|"
+    "../programs/riscv-tests/rv32ui/ld_st.S|"
+    "../programs/riscv-tests/rv32ui/st_ld.S|"
 )
 
 MODE="${1:-all}"
