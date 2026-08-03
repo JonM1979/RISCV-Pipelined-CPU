@@ -95,11 +95,22 @@ end
 
 ////////////////////////////////
 // Initialisation
+//
+// The data memory is zero-filled, then preloaded from "data.hex". This mirrors
+// how instruction_memory loads "program.hex": the run scripts always generate
+// data.hex alongside program.hex -- a real data image for programs that have a
+// .data section (such as the official riscv-tests load/store tests, whose data
+// section holds the values they read back), or a single zero word otherwise.
+// Because data.hex is always present and $readmemh only writes the addresses
+// the file specifies, this is harmless for programs with no data: the memory
+// simply stays zeroed.
 
 initial begin
     for (int i = 0; i < DEPTH_WORDS; i++) begin
         mem[i] = 32'd0;
     end
+
+    $readmemh("data.hex", mem);
 end
 
 ////////////////////////////////
