@@ -100,6 +100,9 @@ begin
     $fdisplay(summary_file, "JAL Instructions         : %0d", jal_instr_count);
     $fdisplay(summary_file, "JALR Instructions        : %0d", jalr_instr_count);
     $fdisplay(summary_file, "LUI Instructions         : %0d", lui_instr_count);
+    $fdisplay(summary_file, "AUIPC Instructions       : %0d", auipc_instr_count);
+    $fdisplay(summary_file, "FENCE Instructions       : %0d", fence_instr_count);
+    $fdisplay(summary_file, "System Instructions      : %0d", system_instr_count);
     $fdisplay(summary_file, "Instruction Mix Total    : %0d",
             rtype_count +
             itype_count +
@@ -108,7 +111,10 @@ begin
             branch_instr_count +
             jal_instr_count +
             jalr_instr_count +
-            lui_instr_count);
+            lui_instr_count +
+            auipc_instr_count +
+            fence_instr_count +
+            system_instr_count);
 
     $fdisplay(summary_file, "\n[MEMORY ACTIVITY]");
     $fdisplay(summary_file, "Memory Instructions      : %0d", load_count + store_count);

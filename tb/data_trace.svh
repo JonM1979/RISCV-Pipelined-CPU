@@ -109,7 +109,7 @@ begin
     );
 
     $fdisplay(trace_file,
-        "  Type Flags        : R=%0b I=%0b LOAD=%0b STORE=%0b BRANCH=%0b JAL=%0b JALR=%0b LUI=%0b",
+        "  Type Flags        : R=%0b I=%0b LOAD=%0b STORE=%0b BRANCH=%0b JAL=%0b JALR=%0b LUI=%0b AUIPC=%0b ECALL=%0b EBREAK=%0b",
         uut.dec.is_rtype,
         uut.is_itype,
         uut.is_load,
@@ -117,7 +117,10 @@ begin
         uut.is_branch,
         uut.is_jal,
         uut.is_jalr,
-        uut.is_lui
+        uut.is_lui,
+        uut.is_auipc,
+        uut.is_ecall,
+        uut.is_ebreak
     );
 
     $fdisplay(trace_file,

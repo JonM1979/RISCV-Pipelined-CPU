@@ -32,6 +32,9 @@ int unsigned branch_instr_count;
 int unsigned jal_instr_count;
 int unsigned jalr_instr_count;
 int unsigned lui_instr_count;
+int unsigned auipc_instr_count;
+int unsigned fence_instr_count;
+int unsigned system_instr_count;
 
 // Forwarding counters
 int unsigned ex_mem_forward_a_count;

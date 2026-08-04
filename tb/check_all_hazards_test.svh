@@ -221,7 +221,10 @@ begin
          branch_instr_count +
          jal_instr_count +
          jalr_instr_count +
-         lui_instr_count) != retired_count) begin
+         lui_instr_count +
+         auipc_instr_count +
+         fence_instr_count +
+         system_instr_count) != retired_count) begin
 
         $fatal(1,
             "Instruction mix total does not match retired count. mix=%0d retired=%0d",
@@ -232,7 +235,10 @@ begin
             branch_instr_count +
             jal_instr_count +
             jalr_instr_count +
-            lui_instr_count,
+            lui_instr_count +
+            auipc_instr_count +
+            fence_instr_count +
+            system_instr_count,
             retired_count
         );
     end

@@ -50,6 +50,9 @@ begin
     jal_instr_count    = 0;
     jalr_instr_count   = 0;
     lui_instr_count     = 0;
+    auipc_instr_count   = 0;
+    fence_instr_count   = 0;
+    system_instr_count  = 0;
 
     ex_mem_forward_a_count = 0;
     ex_mem_forward_b_count = 0;

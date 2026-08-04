@@ -44,6 +44,9 @@ function automatic string disasm(input logic [31:0] instr);
                 FUNCT3_SLT:     
                     return $sformatf("SLTI x%0d, x%0d, %0d", rd, rs1, imm_i);
 
+                FUNCT3_SLTU:
+                    return $sformatf("SLTIU x%0d, x%0d, %0d", rd, rs1, imm_i);
+
                 FUNCT3_XOR:     
                     return $sformatf("XORI x%0d, x%0d, %0d", rd, rs1, imm_i);
                 FUNCT3_OR:      
@@ -55,8 +58,12 @@ function automatic string disasm(input logic [31:0] instr);
                 FUNCT3_SLL:     
                     return $sformatf("SLLI x%0d, x%0d, %0d", rd, rs1, instr[24:20]);
 
-                FUNCT3_SR:      
-                    return $sformatf("SRLI x%0d, x%0d, %0d", rd, rs1, instr[24:20]);
+                FUNCT3_SR: begin
+                    if (funct7 == FUNCT7_ALT)
+                        return $sformatf("SRAI x%0d, x%0d, %0d", rd, rs1, instr[24:20]);
+                    else
+                        return $sformatf("SRLI x%0d, x%0d, %0d", rd, rs1, instr[24:20]);
+                end
 
                 default:
                     return $sformatf("I-TYPE? instr=%08h", instr);
@@ -105,8 +112,20 @@ function automatic string disasm(input logic [31:0] instr);
 
         OPCODE_LOAD: begin
             case (funct3)
-                FUNCT3_LW_SW:
+                FUNCT3_LB:
+                    return $sformatf("LB x%0d, %0d(x%0d)", rd, imm_i, rs1);
+
+                FUNCT3_LH:
+                    return $sformatf("LH x%0d, %0d(x%0d)", rd, imm_i, rs1);
+
+                FUNCT3_LW:
                     return $sformatf("LW x%0d, %0d(x%0d)", rd, imm_i, rs1);
+
+                FUNCT3_LBU:
+                    return $sformatf("LBU x%0d, %0d(x%0d)", rd, imm_i, rs1);
+
+                FUNCT3_LHU:
+                    return $sformatf("LHU x%0d, %0d(x%0d)", rd, imm_i, rs1);
 
                 default:
                     return $sformatf("LOAD? instr=%08h", instr);
@@ -115,7 +134,13 @@ function automatic string disasm(input logic [31:0] instr);
 
         OPCODE_STORE: begin
             case (funct3)
-                FUNCT3_LW_SW:
+                FUNCT3_SB:
+                    return $sformatf("SB x%0d, %0d(x%0d)", rs2, imm_s, rs1);
+
+                FUNCT3_SH:
+                    return $sformatf("SH x%0d, %0d(x%0d)", rs2, imm_s, rs1);
+
+                FUNCT3_SW:
                     return $sformatf("SW x%0d, %0d(x%0d)", rs2, imm_s, rs1);
 
                 default:
@@ -137,6 +162,12 @@ function automatic string disasm(input logic [31:0] instr);
                 FUNCT3_BGE:
                     return $sformatf("BGE x%0d, x%0d, %0d", rs1, rs2, imm_b);
 
+                FUNCT3_BLTU:
+                    return $sformatf("BLTU x%0d, x%0d, %0d", rs1, rs2, imm_b);
+
+                FUNCT3_BGEU:
+                    return $sformatf("BGEU x%0d, x%0d, %0d", rs1, rs2, imm_b);
+
                 default:
                     return $sformatf("BRANCH? instr=%08h", instr);
             endcase
@@ -150,6 +181,21 @@ function automatic string disasm(input logic [31:0] instr);
 
         OPCODE_LUI:
             return $sformatf("LUI x%0d, 0x%05h", rd, instr[31:12]);
+        
+        OPCODE_AUIPC:
+            return $sformatf("AUIPC x%0d, 0x%05h", rd, instr[31:12]);
+
+        OPCODE_MISCMEM:
+            return "FENCE";
+
+        OPCODE_SYSTEM: begin
+            if (instr[31:20] == 12'h000)
+                return "ECALL";
+            else if (instr[31:20] == 12'h001)
+                return "EBREAK";
+            else
+                return $sformatf("SYSTEM? instr=%08h", instr);
+        end
 
         default:
             return $sformatf("UNKNOWN instr=%08h", instr);

@@ -44,9 +44,6 @@
     localparam logic [2:0] FUNCT3_SH      = 3'b001;
     localparam logic [2:0] FUNCT3_SW      = 3'b010;
 
-    // Kept for backward compatibility with existing testbench disassembler
-    localparam logic [2:0] FUNCT3_LW_SW   = 3'b010;
-
     // Branches
     localparam logic [2:0] FUNCT3_BEQ     = 3'b000;
     localparam logic [2:0] FUNCT3_BNE     = 3'b001;

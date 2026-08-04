@@ -45,6 +45,18 @@ begin
                 lui_instr_count <= lui_instr_count + 1;
             end
 
+            OPCODE_AUIPC: begin
+                auipc_instr_count <= auipc_instr_count + 1;
+            end
+
+            OPCODE_MISCMEM: begin
+                fence_instr_count <= fence_instr_count + 1;
+            end
+
+            OPCODE_SYSTEM: begin
+                system_instr_count <= system_instr_count + 1;
+            end
+
             default: begin
                 // Do nothing
             end
