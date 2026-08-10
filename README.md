@@ -10,6 +10,10 @@ simulation and regression flow, a SystemVerilog Assertion suite bound to the
 design, 40 passing tests from the official RISC-V Foundation compliance
 suite, and continuous integration.
 
+## Processor Diagram 
+<img width="1906" height="1184" alt="RISCV-CPU-Diagram" src="https://github.com/user-attachments/assets/545d18ab-e303-470c-b414-f9fd501ce02c" />
+The processor follows a Harvard-style architecture with forwarding. I focused on showing the main signals of the processor and tried to follow a standard pipelined processor diagram to make the diagram easier to read. I left out signals responsible for the trap/exception logic, as the diagram was becoming too full to include them as well. I distinguished control signals by coloring the lines blue and leaving data lines in black. The one detail that I would like to highlight is how choosing the next PC works. The branch predictor only guesses which direction it will take, but when the predictor is wrong and control_taken is correct, then that PC must win; this is represented by having the dual MUX cascade in the IF stage. For further design details, please see the Design Notes below. 
+
 ## Features
 
 - **5-stage pipeline** — IF, ID, EX, MEM, WB
@@ -235,24 +239,24 @@ jump, upper-immediate, and load/store instructions:
 `sh` `sw` `ld_st` `st_ld`
 
 The official sources use C-preprocessor `#include`s and GNU assembler macros
-that the project's own assembler cannot parse, so they are compiled through
+that the project's assembler cannot parse, so they are compiled through
 the real RISC-V GNU toolchain against `env-mini` — a CSR-free stand-in for
-the official test harness (`env/p/riscv_test.h`), since this core has no CSR
+the official test harness (`env/p/riscv_test.h`), since this processor has no CSR
 support. Each test's own concluding `ECALL` is the pass/fail signal (`a0 = 0`
 for pass), read directly from the register file at the moment of the trap —
-no software trap-vector dispatch required, because this core's own hardware
+no software trap-vector required, because this processor's own hardware
 trap mechanism already reaches that `ECALL` precisely.
 
 Two tests are excluded, for two different reasons:
 
 - **`ma_data`** — excluded permanently, by design. It tests that a
-  *misaligned* load returns the correct data value, i.e. it targets a core
+  *misaligned* load returns the correct data value, i.e. it targets a processor
   that either supports misaligned access in hardware or traps and resumes via
-  a handler. This core does neither: it raises a precise misalignment trap
+  a handler. This processor does neither: it raises a precise misalignment trap
   and halts, a deliberate architectural choice (see Known Limitations). This
   test cannot pass regardless of implementation effort.
 - **`fence_i`** — excluded as out of scope. It requires `FENCE.I`, a distinct
-  instruction from plain `FENCE` that this core does not implement.
+  instruction from plain `FENCE` that this processor does not implement.
 
 All 53 tests pass with SVA assertions enabled (`--assert`), meaning the
 pipeline invariants held on every cycle each test ran, not only that the
@@ -265,14 +269,14 @@ to five instructions in flight. A trap taken immediately upon detection would
 leave older instructions mid-flight and could let younger, wrong-path
 instructions take effect. Writeback is the point where instructions commit in
 order, so an exception flag carried alongside its instruction and only acted
-on at writeback is automatically precise: everything older has already
+on at writeback is automatically precise. Everything older has already
 committed, and register writes and memory stores are suppressed the moment an
 exception is known, so nothing younger takes effect either.
 
 **Why no branch target buffer.** Branch and `JAL` targets are PC-relative and
 fully determined by the instruction word plus the current PC, so the target
 can be computed combinationally in IF without a target cache. Only the branch
-*direction* benefits from prediction. `JALR`'s target depends on a register
+direction benefits from prediction. `JALR`'s target depends on a register
 value not known until EX, so it is intentionally left unpredicted and always
 resolves there.
 
@@ -282,15 +286,12 @@ access completes in MEM — forwarding from EX/MEM for a load would forward its
 address, not its data. The load-use stall already prevents a dependent
 instruction from reaching EX while the load is in EX/MEM, but the forwarding
 enable is deliberately narrower than the general write-enable as well, so a
-bug in the stall logic cannot silently become a bug in forwarded data. An SVA
-assertion enforces this directly and caught a real violation of it during
-development, when consolidating the write-enable signal accidentally made
-loads eligible as forwarding sources.
+bug in the stall logic cannot silently become a bug in forwarded data.
 
 **Why the official compliance tests need a custom harness rather than the
 official one.** The official `env/p/riscv_test.h` drives pass/fail through a
 trap handler that reads the `mcause` CSR and writes to a memory-mapped
-`tohost` address — both of which require CSR support this core does not
+`tohost` address — both of which require CSR support this processor does not
 implement. The test *bodies* themselves use no CSR instructions at all, so
 `env-mini` replaces only the harness, keeping the same `ecall`/`a0` pass/fail
 convention the official tests already use.
@@ -303,4 +304,3 @@ convention the official tests already use.
 - No caches; instruction and data memories are single-cycle
 - `ma_data` and `fence_i` excluded from the official compliance suite, for
   the architectural and scope reasons described above
-- Not yet synthesized; no timing, area, or Fmax results yet
