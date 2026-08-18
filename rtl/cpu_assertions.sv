@@ -71,7 +71,9 @@ module cpu_assertions (
     input logic [31:0] wb_data,
 
     input logic        trap_valid,
-    input logic [3:0]  trap_cause
+    input logic [3:0]  trap_cause,
+
+    input logic        trapped
 );
 
 ///////////////////////////////////////////////////////////////////////////
@@ -110,12 +112,26 @@ a_trap_cause_defined: assert property (@(posedge clk) disable iff (reset)
                     (trap_cause == CAUSE_LOAD_FAULT)     ||
                     (trap_cause == CAUSE_STORE_FAULT)))
 else $error("Trap raised with undefined cause %0d", trap_cause);
-
+ 
 // A faulting instruction is never allowed to write back.
 a_exception_blocks_write: assert property (@(posedge clk) disable iff (reset)
     (mem_wb_valid && mem_wb_exception) |-> !wb_we)
 else $error("Faulting instruction wrote back");
-
+ 
+// The halt is sticky, not a one-cycle pulse. Once the core has trapped, no
+// instruction younger than the faulting one may ever commit a register write
+// -- this is the invariant that a naive one-cycle trap freeze violates,
+// because the pipeline drains and resumes the cycle after trap_valid drops.
+a_trapped_blocks_all_writes: assert property (@(posedge clk) disable iff (reset)
+    trapped |-> !wb_we)
+else $error("Register write committed after the core had already trapped");
+ 
+// Once trapped, the PC is parked at the faulting instruction and never moves
+// again (until reset). Guards against the freeze wearing off after a cycle.
+a_trapped_freezes_pc: assert property (@(posedge clk) disable iff (reset)
+    trapped |=> ($stable(pc)))
+else $error("PC advanced after the core had already trapped");
+ 
 // A bubble never claims to write a register.
 a_bubble_no_write: assert property (@(posedge clk) disable iff (reset)
     !mem_wb_valid |-> !wb_we)
@@ -395,5 +411,7 @@ bind cpu_top cpu_assertions u_assert (
     .wb_data(wb_data),
 
     .trap_valid(trap_valid),
-    .trap_cause(trap_cause)
+    .trap_cause(trap_cause),
+
+    .trapped(trapped)
 );

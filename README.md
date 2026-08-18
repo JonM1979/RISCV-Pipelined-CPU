@@ -258,9 +258,10 @@ Two tests are excluded, for two different reasons:
 - **`fence_i`** — excluded as out of scope. It requires `FENCE.I`, a distinct
   instruction from plain `FENCE` that this processor does not implement.
 
-All 53 tests pass with SVA assertions enabled (`--assert`), meaning the
-pipeline invariants held on every cycle each test ran, not only that the
-final architectural state was correct.
+All 54 tests - the 53 above plus a dedicated processor-trap-halt test that runs
+past the trap where the main testbench cannot reach - pass with SVA assertions 
+enabled (`--assert`), meaning the pipeline invariants held on every cycle each 
+test ran, not only that the final architectural state was correct.
 
 ## Design Notes
 
@@ -272,6 +273,21 @@ order, so an exception flag carried alongside its instruction and only acted
 on at writeback is automatically precise. Everything older has already
 committed, and register writes and memory stores are suppressed the moment an
 exception is known, so nothing younger takes effect either.
+
+Why the halt is a sticky latch, not a single-cycle freeze. trap_valid is a 
+combinational signal — it is only high for the one cycle the faulting instruction 
+occupies WB. Gating the PC freeze and pipeline flushes on trap_valid alone therefore
+only stops the core for a single cycle: the next cycle it drops, the PC resumes, and 
+the pipeline drains and keeps executing. Worse, instructions already past the ID/EX 
+boundary when the trap commits are not flushed by an IF/ID + ID/EX flush, so they 
+reach WB and commit their register writes after the trap. To make the halt real, a 
+sticky trapped flag latches on the first trap and clears only on reset; the PC freeze,
+the IF/ID and ID/EX flushes, and a freeze of the EX/MEM and MEM/WB registers are all 
+gated on trap_hold = trap_valid || trapped. This parks the PC at the faulting instruction,
+holds it in WB so trap_valid/trap_cause/trap_pc stay asserted for as long as the core is 
+halted, and guarantees no instruction younger than the trap ever commits. Two liveness 
+assertions (a_trapped_blocks_all_writes, a_trapped_freezes_pc) and a dedicated regression 
+test (tb/tb_trap_halt.sv, run past the trap where the main testbench cannot reach) lock this in.
 
 **Why no branch target buffer.** Branch and `JAL` targets are PC-relative and
 fully determined by the instruction word plus the current PC, so the target

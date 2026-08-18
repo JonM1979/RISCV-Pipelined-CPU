@@ -11,7 +11,10 @@
 // Exceptions are precise. A faulting instruction is detected in the stage that
 // can see the fault, the flag travels with it down the pipeline, and the trap
 // is only taken when that instruction reaches WB. Everything older has already
-// committed and everything younger is discarded.
+// committed and everything younger is discarded.The trap latches a sticky halt
+// (see the 'trapped' flag): once a trap is taken the core parks its PC at the
+// faulting instruction and commits nothing further until reset, so the halt is
+// permanent rather than a single cycle.
 //
 // ============================================================================
 // TABLE OF CONTENTS
@@ -95,6 +98,15 @@ logic           bht_predict_taken;
 logic           predict_taken;
 logic [31:0]    predict_target;
 logic [31:0]    next_pc;
+
+// Processor halt. trap_valid is only asserted for the single cycle the faulting
+// instruction sits in WB, so freezing anything on trap_valid alone lasts one
+// cycle and the pipeline resumes the moment it drops. 'trapped' latches on the
+// first trap and clears only on reset, so the core stays halted. trap_hold is
+// the OR of the two: true on the trap cycle itself and every cycle after.
+logic           trapped;
+logic           trap_hold;
+assign trap_hold = trap_valid || trapped;
 
 ///////////////////////////////////////////
 // IF/ID Pipeline Register Signals
@@ -407,12 +419,24 @@ always_comb begin
         next_pc = pc_plus_4;
 end
 
+// Processor halt latch. Set on the first trap and held until reset, so the core
+// stays stopped instead of resuming the cycle after trap_valid drops.
+always_ff @(posedge clk) begin
+    if (reset)
+        trapped <= 1'b0;
+    else if (trap_valid)
+        trapped <= 1'b1;
+end
+
+
 // Once a trap is taken the core stops fetching. A full implementation would
-// vector to a handler here; this core halts so the trap is observable.
+// vector to a handler here; this core halts so the trap is observable. The
+// freeze is gated on trap_hold (not trap_valid) so it persists past the single
+// commit cycle and the PC stays parked at the faulting instruction.
 always_ff @(posedge clk) begin
     if (reset)
         pc <= 32'd0;
-    else if (trap_valid)
+    else if (trap_hold)
         pc <= pc;          // hold at the faulting point
     else if (!stall || control_taken)
         pc <= next_pc;
@@ -434,7 +458,7 @@ always_ff @(posedge clk) begin
         if_id_predict_taken  <= 1'b0;
         if_id_predict_target <= 32'd0;
     end
-    else if (control_taken || trap_valid) begin
+    else if (control_taken || trap_hold) begin
         if_id_instr          <= 32'd0;
         if_id_pc             <= 32'd0;
         if_id_pc_plus_4      <= 32'd0;
@@ -549,8 +573,9 @@ hazard_unit hazard_unit_inst(
 // ID/EX is cleared on reset, control redirect, stall, or trap.
 // Clearing on stall inserts a bubble into EX while IF/ID are held frozen.
 // Clearing on control_taken removes the wrong-path instruction in decode.
+// trap_hold (not trap_valid) keeps EX starved for every cyccle after a trap
 always_ff @(posedge clk) begin
-    if (reset || control_taken || stall || trap_valid) begin
+    if (reset || control_taken || stall || trap_hold) begin
         id_ex_instr     <= 32'd0;
         id_ex_pc        <= 32'd0;
         id_ex_pc_plus_4 <= 32'd0;
@@ -777,6 +802,10 @@ assign unused_debug_signals = |{jal_taken, jalr_taken,
 
 // Carries EX results into MEM.
 // Store data uses forward_b, so a store can write a recently computed value.
+// On trap_hold the register is frozen: instructions younger than the faulting
+// one are still in EX/MEM when the trap commits, and letting them advance to
+// MEM/WB would let them write back after the trap. Holding EX/MEM parks them
+// so nothing younger than the trap ever reaches WB.
 always_ff @(posedge clk) begin
     if (reset) begin
         ex_mem_instr      <= 32'd0;
@@ -800,6 +829,15 @@ always_ff @(posedge clk) begin
 
         ex_mem_exception <= 1'b0;
         ex_mem_cause     <= CAUSE_NONE;
+    end
+    else if  (trap_hold) begin
+        // Freeze in place, hold every field, advance nothing into MEM/WB
+        ex_mem_valid      <= 1'b0;
+        ex_mem_reg_write <= 1'b0;
+        ex_mem_is_load   <= 1'b0;
+        ex_mem_is_store  <= 1'b0;
+
+        
     end
     else begin
         ex_mem_instr     <= id_ex_instr;
@@ -925,6 +963,9 @@ end
 // For loads, the WB result comes from memory.
 // For everything else, it comes from the EX/MEM ALU result.
 // JAL/JALR still resolve to PC+4 via mem_wb_is_link.
+// On trap_hold the faulting instruction is held in WB rather than displaced by
+// a bubble, so trap_valid/trap_cause/trap_pc stay asserted for as long as the
+// core is halted instead of pulsing for a single cycle.
 always_ff @(posedge clk) begin
     if (reset) begin
         mem_wb_instr     <= 32'd0;
@@ -944,6 +985,29 @@ always_ff @(posedge clk) begin
 
         mem_wb_exception <= 1'b0;
         mem_wb_cause     <= CAUSE_NONE;
+    end
+    else if (trap_hold) begin
+        // Hold the faulting instruction in place. Every field keeps its value,
+        // so mem_wb_exception (and thus trap_valid) stays asserted while halted.
+
+        mem_wb_instr     <= mem_wb_instr;
+        mem_wb_pc        <= mem_wb_pc;
+        mem_wb_pc_plus_4 <= mem_wb_pc_plus_4;
+        mem_wb_valid     <= mem_wb_valid;
+
+        mem_wb_result    <= mem_wb_result;
+        mem_wb_read_data <= mem_load_extended;
+
+        mem_wb_rd     <= mem_wb_rd;
+        mem_wb_opcode <= mem_wb_opcode;
+
+        // A memory fault cancels the write.
+        mem_wb_reg_write <= mem_wb_reg_write && !mem_exception;
+        mem_wb_is_link   <= mem_wb_is_link;
+        mem_wb_is_load   <= mem_wb_is_load;
+
+        mem_wb_exception <= mem_exception;
+        mem_wb_cause     <= mem_cause;
     end
     else begin
         mem_wb_instr     <= ex_mem_instr;
