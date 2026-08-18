@@ -1,3 +1,4 @@
+ all · SH
 #!/usr/bin/env bash
 set -euo pipefail
  
@@ -320,7 +321,25 @@ if [ "$RUN_TRAP_HALT" -eq 1 ]; then
     log "Program     : sticky-halt behaviour after a trap"
     log "------------------------------------------------------------"
  
-    if [ -x "./run_trap_halt.sh" ] && ./run_trap_halt.sh 2>&1 | tee -a "$REGRESSION_LOG" | grep -q "PASS: core halted correctly"; then
+    # Run via `bash` explicitly so this does not depend on the execute bit
+    # surviving in the checkout, and capture the output to a variable so the
+    # PASS check is separate from the pipeline exit status (grep -q closing the
+    # pipe early can make an upstream stage exit non-zero under pipefail and
+    # spuriously flip the result to FAIL).
+    TRAP_HALT_OUT=""
+    TRAP_HALT_RC=0
+    if [ -f "./run_trap_halt.sh" ]; then
+        TRAP_HALT_OUT="$(bash ./run_trap_halt.sh 2>&1)" || TRAP_HALT_RC=$?
+    else
+        TRAP_HALT_OUT="run_trap_halt.sh not found"
+        TRAP_HALT_RC=1
+    fi
+ 
+    printf '%s\n' "$TRAP_HALT_OUT" >> "$REGRESSION_LOG"
+    printf '%s\n' "$TRAP_HALT_OUT"
+ 
+    if [ "$TRAP_HALT_RC" -eq 0 ] &&
+       printf '%s\n' "$TRAP_HALT_OUT" | grep -q "PASS: core halted correctly"; then
         log "PASS: trap_halt"
         PASS_COUNT=$((PASS_COUNT + 1))
     else

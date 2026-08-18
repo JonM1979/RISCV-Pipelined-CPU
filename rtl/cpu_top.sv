@@ -996,18 +996,18 @@ always_ff @(posedge clk) begin
         mem_wb_valid     <= mem_wb_valid;
 
         mem_wb_result    <= mem_wb_result;
-        mem_wb_read_data <= mem_load_extended;
+        mem_wb_read_data <= mem_wb_read_data;
 
         mem_wb_rd     <= mem_wb_rd;
         mem_wb_opcode <= mem_wb_opcode;
 
         // A memory fault cancels the write.
-        mem_wb_reg_write <= mem_wb_reg_write && !mem_exception;
+        mem_wb_reg_write <= mem_wb_reg_write;
         mem_wb_is_link   <= mem_wb_is_link;
         mem_wb_is_load   <= mem_wb_is_load;
 
-        mem_wb_exception <= mem_exception;
-        mem_wb_cause     <= mem_cause;
+        mem_wb_exception <= mem_wb_exception;
+        mem_wb_cause     <= mem_wb_cause;
     end
     else begin
         mem_wb_instr     <= ex_mem_instr;
